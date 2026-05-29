@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CheckSquare, Settings, Users } from "lucide-react";
+import { CheckSquare, Settings, Users } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -36,9 +36,17 @@ export function TeamCard({ team }: TeamCardProps) {
 
   return (
     <>
-      <Card className="flex flex-col gap-0 p-0 overflow-hidden">
+      {/* relative so the stretched link sits behind interactive children */}
+      <Card className="relative flex flex-col gap-0 p-0 overflow-hidden transition-shadow hover:shadow-md group/card">
+        {/* Stretched link covers the whole card except interactive elements */}
+        <Link
+          href={`/teams/${team.id}`}
+          className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-2 focus-visible:outline-indigo-500"
+          aria-label={`Open ${team.name}`}
+        />
+
         <div className="flex flex-col gap-3 p-5 flex-1">
-          {/* Top row: department badge */}
+          {/* Top row: department badge left, settings gear right */}
           <div className="flex items-center justify-between">
             {deptColor && team.department ? (
               <span
@@ -52,6 +60,20 @@ export function TeamCard({ team }: TeamCardProps) {
             ) : (
               <span />
             )}
+
+            {/* Settings gear — z-10 so it sits above the stretched link */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative z-10 size-7 text-muted-foreground opacity-0 group-hover/card:opacity-100 hover:text-gray-900 transition-opacity"
+              onClick={(e) => {
+                e.preventDefault();
+                setSettingsOpen(true);
+              }}
+              title="Team settings"
+            >
+              <Settings className="size-4" />
+            </Button>
           </div>
 
           {/* Name */}
@@ -59,7 +81,7 @@ export function TeamCard({ team }: TeamCardProps) {
 
           {/* Description */}
           {team.description && (
-            <p className="text-sm text-muted-foreground line-clamp-3">{team.description}</p>
+            <p className="text-sm text-gray-600 line-clamp-3">{team.description}</p>
           )}
           {!team.description && <div className="flex-1" />}
         </div>
@@ -69,7 +91,7 @@ export function TeamCard({ team }: TeamCardProps) {
           <div className="flex items-center gap-6">
             {/* Members */}
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                 <Users className="size-3" />
                 Members
               </span>
@@ -88,34 +110,13 @@ export function TeamCard({ team }: TeamCardProps) {
 
             {/* Active Tasks */}
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                 <CheckSquare className="size-3" />
                 Active Tasks
               </span>
               <span className="text-xl font-bold text-gray-900">{team.active_task_count}</span>
             </div>
           </div>
-        </div>
-
-        {/* Bottom: Open team button + settings icon */}
-        <div className="border-t border-border px-5 py-3 flex items-center gap-2">
-          <Link href={`/teams/${team.id}`} className="flex-1">
-            <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-700">
-              Open team <ArrowRight className="ml-1.5 size-4" />
-            </Button>
-          </Link>
-          <Button
-            variant="outline"
-            size="icon"
-            className="shrink-0 text-muted-foreground hover:text-gray-900"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSettingsOpen(true);
-            }}
-            title="Team settings"
-          >
-            <Settings className="size-4" />
-          </Button>
         </div>
       </Card>
 

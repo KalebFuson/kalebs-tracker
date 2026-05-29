@@ -73,3 +73,97 @@ export async function sendInvitations(
 
   return { ok: true, invitations: results };
 }
+
+// ---------------------------------------------------------------------------
+// Accept invitation
+// ---------------------------------------------------------------------------
+
+export type AcceptInvitationResult = { ok: true } | { ok: false; error: string };
+
+export async function acceptInvitation(token: string): Promise<AcceptInvitationResult> {
+  noStore();
+
+  // 1. Verify caller is signed in
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) return { ok: false, error: "Not signed in." };
+  if (!user.email) return { ok: false, error: "Account has no email address." };
+
+  // 2. Look up the invitation via SECURITY DEFINER RPC
+  const { data: rows, error: rpcError } = await supabase.rpc(
+    "get_invitation_by_token",
+    { p_token: token },
+  );
+
+  if (rpcError) return { ok: false, error: rpcError.message };
+
+  const invitation = rows?.[0] ?? null;
+  if (!invitation) return { ok: false, error: "Invitation not found." };
+  if (invitation.accepted_at) return { ok: false, error: "This invitation has already been accepted." };
+  if (new Date(invitation.expires_at) < new Date()) {
+    return { ok: false, error: "This invitation has expired." };
+  }
+
+  // 3. Email must match
+  if (user.email.toLowerCase() !== invitation.email.toLowerCase()) {
+    return {
+      ok: false,
+      error: `This invitation is for ${invitation.email}. Please sign in with that account.`,
+    };
+  }
+
+  // 4. Use admin client for the bootstrap inserts (same pattern as createOrganization).
+  //    We've verified the user's identity and the token — admin access is justified here.
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+
+  // 4a. Join the org (upsert — user might already be a member of this org)
+  const { error: orgMemberError } = await admin
+    .from("org_members")
+    .upsert(
+      { org_id: invitation.org_id, user_id: user.id, role: invitation.role },
+      { onConflict: "org_id,user_id", ignoreDuplicates: true },
+    );
+
+  if (orgMemberError) return { ok: false, error: orgMemberError.message };
+
+  // 4b. Join the default teams (if any)
+  const teamIds: string[] = invitation.default_team_ids ?? [];
+  if (teamIds.length > 0) {
+    const teamMemberRows = teamIds.map((teamId: string) => ({
+      team_id: teamId,
+      user_id: user.id,
+      role: null,
+    }));
+
+    const { error: teamMemberError } = await admin
+      .from("team_members")
+      .upsert(teamMemberRows, { onConflict: "team_id,user_id", ignoreDuplicates: true });
+
+    if (teamMemberError) return { ok: false, error: teamMemberError.message };
+  }
+
+  // 5. Mark invitation as accepted
+  const { error: updateError } = await admin
+    .from("invitations")
+    .update({ accepted_at: new Date().toISOString() })
+    .eq("id", invitation.id);
+
+  if (updateError) return { ok: false, error: updateError.message };
+
+  // 6. Write an event (best-effort)
+  await admin.from("events").insert({
+    org_id: invitation.org_id,
+    actor_id: user.id,
+    entity_type: "org_member",
+    entity_id: invitation.id,
+    action: "joined",
+    metadata: { via: "invitation" },
+  });
+
+  return { ok: true };
+}

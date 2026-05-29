@@ -42,7 +42,7 @@ function Section({ title, children, defaultOpen = true }: SectionProps) {
     <div className="border-b border-border py-3">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-gray-700"
+        className="flex w-full items-center justify-between px-4 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-gray-700"
       >
         {title}
         <ChevronDown

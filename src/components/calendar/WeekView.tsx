@@ -65,7 +65,7 @@ export function WeekView({ tasks, date, currentUserId, myTeamMemberIds }: WeekVi
                 isCurrentDay && "bg-indigo-50",
               )}
             >
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {format(day, "EEE")}
               </p>
               <p

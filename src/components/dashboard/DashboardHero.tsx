@@ -47,7 +47,7 @@ export function DashboardHero({ displayName, stats }: DashboardHeroProps) {
             <h1 className="text-2xl font-semibold text-gray-900">
               {getGreeting()}, {displayName}!
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-gray-600">
               {buildSubtitle(stats)}
             </p>
           </div>

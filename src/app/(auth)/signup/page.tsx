@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -65,10 +65,15 @@ function validateForm(
   return errors;
 }
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const inviteToken = searchParams.get("invite");
+  const prefillEmail = searchParams.get("email") ?? "";
+
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(prefillEmail);
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
@@ -104,9 +109,95 @@ export default function SignupPage() {
       return;
     }
 
-    router.push("/onboarding");
+    // After signup, return to the invite acceptance page if there's a pending invite
+    if (inviteToken) {
+      router.push(`/onboarding/accept-invite/${inviteToken}`);
+    } else {
+      router.push("/onboarding");
+    }
   }
 
+  const emailLocked = Boolean(prefillEmail && inviteToken);
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="fullName">Full name</Label>
+        <Input
+          id="fullName"
+          type="text"
+          autoComplete="name"
+          placeholder="Jane Doe"
+          value={fullName}
+          onChange={(event) => setFullName(event.target.value)}
+          disabled={isLoading}
+          aria-invalid={Boolean(fieldErrors.fullName)}
+        />
+        {fieldErrors.fullName ? (
+          <p className="text-sm text-red-600" role="alert">
+            {fieldErrors.fullName}
+          </p>
+        ) : null}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@company.com"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          disabled={isLoading || emailLocked}
+          aria-invalid={Boolean(fieldErrors.email)}
+          className={emailLocked ? "bg-gray-50 text-muted-foreground" : undefined}
+        />
+        {emailLocked && (
+          <p className="text-xs text-muted-foreground">
+            This invite can only be accepted with the email it was sent to.
+          </p>
+        )}
+        {fieldErrors.email ? (
+          <p className="text-sm text-red-600" role="alert">
+            {fieldErrors.email}
+          </p>
+        ) : null}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          disabled={isLoading}
+          aria-invalid={Boolean(fieldErrors.password)}
+        />
+        {fieldErrors.password ? (
+          <p className="text-sm text-red-600" role="alert">
+            {fieldErrors.password}
+          </p>
+        ) : null}
+      </div>
+      {error ? (
+        <p className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <Button
+        type="submit"
+        className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+        disabled={isLoading}
+      >
+        {isLoading ? "Creating account…" : "Create account"}
+      </Button>
+    </form>
+  );
+}
+
+export default function SignupPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <Card className="w-full max-w-md shadow-sm">
@@ -117,74 +208,9 @@ export default function SignupPage() {
           <CardDescription>Create your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full name</Label>
-              <Input
-                id="fullName"
-                type="text"
-                autoComplete="name"
-                placeholder="Jane Doe"
-                value={fullName}
-                onChange={(event) => setFullName(event.target.value)}
-                disabled={isLoading}
-                aria-invalid={Boolean(fieldErrors.fullName)}
-              />
-              {fieldErrors.fullName ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {fieldErrors.fullName}
-                </p>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@company.com"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                disabled={isLoading}
-                aria-invalid={Boolean(fieldErrors.email)}
-              />
-              {fieldErrors.email ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {fieldErrors.email}
-                </p>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                disabled={isLoading}
-                aria-invalid={Boolean(fieldErrors.password)}
-              />
-              {fieldErrors.password ? (
-                <p className="text-sm text-red-600" role="alert">
-                  {fieldErrors.password}
-                </p>
-              ) : null}
-            </div>
-            {error ? (
-              <p className="text-sm text-red-600" role="alert">
-                {error}
-              </p>
-            ) : null}
-            <Button
-              type="submit"
-              className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating account…" : "Create account"}
-            </Button>
-          </form>
+          <Suspense>
+            <SignupForm />
+          </Suspense>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link

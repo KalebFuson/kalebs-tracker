@@ -123,7 +123,7 @@ function FieldLabel({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+    <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
       <Icon className="size-3.5 shrink-0" />
       <span>{children}</span>
     </div>

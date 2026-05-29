@@ -23,7 +23,7 @@ export function AvatarStack({ members, max = 3, size = "md" }: AvatarStackProps)
   const visible = members.slice(0, max);
   const overflow = members.length - max;
 
-  const sizeClass = size === "sm" ? "size-6 text-[8px]" : "size-8 text-[10px]";
+  const sizeClass = size === "sm" ? "size-6 text-[9px]" : "size-8 text-xs";
 
   return (
     <div className="flex -space-x-2">

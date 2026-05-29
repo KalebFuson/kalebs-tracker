@@ -43,9 +43,13 @@ export function RecentActivityFeed({ events }: RecentActivityFeedProps) {
       </CardHeader>
       <CardContent className="flex-1 px-0 pb-0">
         {events.length === 0 ? (
-          <p className="px-4 py-6 text-center text-sm text-muted-foreground">
-            No recent activity yet.
-          </p>
+          <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
+            <Activity className="size-7 text-gray-300" />
+            <p className="text-sm font-medium text-gray-700">No recent activity yet.</p>
+            <p className="text-xs text-gray-500">
+              Activity will appear here as you and your team work on tasks.
+            </p>
+          </div>
         ) : (
           <>
             <ul>

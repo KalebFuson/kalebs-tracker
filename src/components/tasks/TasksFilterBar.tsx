@@ -21,8 +21,12 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "due_date_desc", label: "Due Date (Desc)" },
   { value: "priority", label: "Priority" },
   { value: "status", label: "Status" },
-  { value: "created_at", label: "Created At" },
+  { value: "created_at", label: "Newest First" },
 ];
+
+function getSortLabel(sort: string): string {
+  return SORT_OPTIONS.find((opt) => opt.value === sort)?.label ?? "Due Date (Asc)";
+}
 
 type TasksFilterBarProps = {
   teams: TeamFilterOption[];
@@ -104,7 +108,7 @@ export function TasksFilterBar({ teams, urlParams }: TasksFilterBarProps) {
         <span className="text-sm text-muted-foreground">Sort by:</span>
         <Select value={urlParams.sort} onValueChange={handleSortChange}>
           <SelectTrigger className="h-9 w-44 text-sm">
-            <SelectValue />
+            <SelectValue>{getSortLabel(urlParams.sort)}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {SORT_OPTIONS.map((opt) => (

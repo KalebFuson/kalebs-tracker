@@ -15,10 +15,10 @@ export function TaskDetailSubtasks({ subtasks, completedCount }: TaskDetailSubta
     <div>
       {/* Header row with label + count */}
       <div className="mb-2 flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Subtasks
         </p>
-        <span className="text-[11px] font-medium text-muted-foreground">
+        <span className="text-xs font-medium text-muted-foreground">
           {total > 0 ? `${completedCount} / ${total}` : "0"}
         </span>
       </div>

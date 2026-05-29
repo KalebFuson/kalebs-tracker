@@ -72,7 +72,7 @@ type TaskActivityFeedProps = {
 export function TaskActivityFeed({ activity }: TaskActivityFeedProps) {
   return (
     <div>
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Activity
       </p>
 
@@ -92,7 +92,7 @@ export function TaskActivityFeed({ activity }: TaskActivityFeedProps) {
 
             return (
               <li key={item.id} className="flex items-start gap-3">
-                <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[10px] font-semibold text-indigo-700">
+                <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
                   {initials}
                 </div>
                 <div>

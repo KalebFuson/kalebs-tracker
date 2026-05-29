@@ -59,15 +59,15 @@ export function MonthView({ tasks, date, currentUserId, myTeamMemberIds }: Month
         {DAY_HEADERS.map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+            className="py-2 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground"
           >
             {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar cells */}
-      <div className="grid flex-1 grid-cols-7 overflow-auto">
+      {/* Calendar cells — border-l/border-t on container + border-r/border-b on each cell = full grid */}
+      <div className="grid flex-1 grid-cols-7 overflow-auto border-l border-t border-border">
         {days.map((day) => {
           const key = format(day, "yyyy-MM-dd");
           const dayTasks = tasksByDate.get(key) ?? [];
@@ -103,7 +103,7 @@ export function MonthView({ tasks, date, currentUserId, myTeamMemberIds }: Month
                   <TaskPill key={task.id} task={task} />
                 ))}
                 {overflow > 0 && (
-                  <p className="cursor-default px-1 text-[11px] font-medium text-indigo-600">
+                  <p className="cursor-default px-1 text-xs font-medium text-indigo-600">
                     +{overflow} more
                   </p>
                 )}

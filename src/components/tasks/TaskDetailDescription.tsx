@@ -5,7 +5,7 @@ type TaskDetailDescriptionProps = {
 export function TaskDetailDescription({ description }: TaskDetailDescriptionProps) {
   return (
     <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Description
       </p>
       <div className="rounded-lg border border-border bg-white p-4">

@@ -31,15 +31,15 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-white">
-        <div className="border-b border-border px-4 py-5">
-          <p className="text-lg font-bold text-indigo-600">Kalebs Tracker</p>
+      <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-gray-50">
+        <div className="border-b border-border px-5 py-5">
+          <p className="text-base font-extrabold tracking-tight text-indigo-600">Kalebs Tracker</p>
         </div>
 
         <div className="px-3 py-4">
           <Button
             type="button"
-            className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+            className="w-full bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"
             onClick={() => setTaskDialogOpen(true)}
           >
             <Plus data-icon="inline-start" />
@@ -47,7 +47,7 @@ export function Sidebar() {
           </Button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3">
+        <nav className="flex-1 space-y-0.5 px-2">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive =
               pathname === href || pathname.startsWith(`${href}/`);
@@ -57,10 +57,10 @@ export function Sidebar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors border-l-[3px]",
                   isActive
-                    ? "bg-indigo-50 text-indigo-600"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                    ? "border-indigo-600 bg-white text-indigo-700 shadow-sm"
+                    : "border-transparent text-gray-600 hover:bg-white hover:text-gray-900",
                 )}
               >
                 <Icon className="size-4 shrink-0" />
@@ -70,14 +70,14 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="border-t border-border px-3 py-4">
+        <div className="border-t border-border px-2 py-4">
           <Link
             href="/settings"
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors border-l-[3px]",
               pathname === "/settings" || pathname.startsWith("/settings/")
-                ? "bg-indigo-50 text-indigo-600"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                ? "border-indigo-600 bg-white text-indigo-700 shadow-sm"
+                : "border-transparent text-gray-600 hover:bg-white hover:text-gray-900",
             )}
           >
             <Settings className="size-4 shrink-0" />

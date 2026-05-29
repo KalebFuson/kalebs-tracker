@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,9 +13,14 @@ type DashboardCalendarProps = {
 };
 
 export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
+  const router = useRouter();
   const [month, setMonth] = useState<Date>(new Date());
 
   const taskDateSet = new Set(datesWithTasks);
+
+  function handleDayClick(day: Date) {
+    router.push(`/calendar?view=day&date=${format(day, "yyyy-MM-dd")}`);
+  }
 
   const modifiers = {
     hasTasks: (date: Date) => {
@@ -49,7 +56,8 @@ export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
           onMonthChange={setMonth}
           modifiers={modifiers}
           modifiersClassNames={modifiersClassNames}
-          className="mx-auto w-full"
+          onDayClick={handleDayClick}
+          className="mx-auto w-full [&_.rdp-day]:cursor-pointer"
         />
       </CardContent>
     </Card>

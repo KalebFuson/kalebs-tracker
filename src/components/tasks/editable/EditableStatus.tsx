@@ -21,11 +21,11 @@ const STATUS_OPTIONS: { value: TaskStatus; label: string; dot: string }[] = [
 ];
 
 const STATUS_BADGE: Record<TaskStatus, string> = {
-  todo: "bg-gray-100 text-gray-600",
-  in_progress: "bg-blue-100 text-blue-700",
-  in_review: "bg-purple-100 text-purple-700",
-  done: "bg-green-100 text-green-700",
-  blocked: "bg-red-100 text-red-700",
+  todo: "bg-gray-100 text-gray-700",
+  in_progress: "bg-blue-100 text-blue-800",
+  in_review: "bg-purple-100 text-purple-800",
+  done: "bg-emerald-100 text-emerald-800",
+  blocked: "bg-red-100 text-red-800",
 };
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
@@ -65,12 +65,12 @@ export function EditableStatus({ taskId, currentStatus }: EditableStatusProps) {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "flex w-fit cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-opacity hover:ring-1 hover:ring-current/30",
+            "flex w-fit cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-opacity hover:ring-1 hover:ring-current/30",
             STATUS_BADGE[optimisticStatus],
             isPending && "opacity-60",
           )}
         >
-          <span className="size-1.5 rounded-full bg-current opacity-70" />
+          <span className="size-2 rounded-full bg-current" />
           {STATUS_LABEL[optimisticStatus]}
         </PopoverTrigger>
         <PopoverContent className="w-44 p-1" align="start">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Building2, ChevronRight } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,8 +16,9 @@ export function MyTeamsPanel({ teams }: MyTeamsPanelProps) {
           <CardTitle className="text-base font-semibold text-gray-900">
             My Teams
           </CardTitle>
-          {/* Will link to /teams once that page is built */}
-          <ChevronRight className="size-4 text-muted-foreground" />
+          <Link href="/teams" className="text-muted-foreground hover:text-gray-900 transition-colors">
+            <ChevronRight className="size-4" />
+          </Link>
         </div>
       </CardHeader>
       <CardContent className="px-0 pb-2">
@@ -45,7 +47,7 @@ export function MyTeamsPanel({ teams }: MyTeamsPanelProps) {
                 </div>
                 <div className="shrink-0 text-right">
                   <p className="text-lg font-bold text-gray-900">{team.openTaskCount}</p>
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     Tasks
                   </p>
                 </div>

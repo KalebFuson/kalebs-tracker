@@ -100,11 +100,11 @@ export function TaskRow({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Description */}
               <div>
-                <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Description
                 </p>
                 {task.description ? (
-                  <p className="line-clamp-3 text-sm text-gray-700">{task.description}</p>
+                  <p className="line-clamp-3 text-sm text-gray-900">{task.description}</p>
                 ) : (
                   <p className="text-sm text-muted-foreground italic">No description.</p>
                 )}
@@ -113,7 +113,7 @@ export function TaskRow({
               {/* Subtasks preview */}
               {task.subtask_count > 0 && (
                 <div>
-                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Subtasks
                   </p>
                   <p className="text-sm text-gray-600">

@@ -3,14 +3,13 @@ import { Suspense } from "react";
 
 import { TeamActivityCard } from "@/components/teams/TeamActivityCard";
 import { TeamHero } from "@/components/teams/TeamHero";
-import { TeamInviteCard } from "@/components/teams/TeamInviteCard";
 import { TeamMembersCard } from "@/components/teams/TeamMembersCard";
 import { TeamStatsCard } from "@/components/teams/TeamStatsCard";
 import { TeamTabs } from "@/components/teams/TeamTabs";
 import { TeamTasksTab } from "@/components/teams/TeamTasksTab";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgMembers } from "@/lib/tasks/queries";
-import { getOrgTeamsList, getTeamById } from "@/lib/teams/queries";
+import { getTeamById } from "@/lib/teams/queries";
 import { getTasksForOrg } from "@/lib/tasks/queries";
 
 type TeamDetailPageProps = {
@@ -42,10 +41,9 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
   if (!orgId) redirect("/login");
 
   // Parallel data fetching
-  const [team, orgMembers, orgTeams] = await Promise.all([
+  const [team, orgMembers] = await Promise.all([
     getTeamById(teamId),
     getOrgMembers(orgId),
-    getOrgTeamsList(orgId),
   ]);
 
   if (!team) notFound();
@@ -69,7 +67,7 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
                 <TeamActivityCard events={team.recent_events} />
               </div>
 
-              {/* Right: members, stats, invite */}
+              {/* Right: members, stats */}
               <div className="flex flex-col gap-4">
                 <TeamMembersCard
                   teamId={team.id}
@@ -78,7 +76,6 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
                   currentUserId={user.id}
                 />
                 <TeamStatsCard team={team} />
-                <TeamInviteCard teamId={team.id} orgTeams={orgTeams} />
               </div>
             </div>
           ) : (

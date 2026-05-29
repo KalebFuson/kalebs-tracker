@@ -51,7 +51,7 @@ function MemberRow({
   return (
     <li className="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
       {/* Avatar */}
-      <div className="size-8 shrink-0 rounded-full overflow-hidden bg-indigo-200 flex items-center justify-center text-[10px] font-bold text-indigo-700">
+      <div className="size-8 shrink-0 rounded-full overflow-hidden bg-indigo-200 flex items-center justify-center text-xs font-bold text-indigo-700">
         {member.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={member.avatar_url} alt={name} className="size-full object-cover" />

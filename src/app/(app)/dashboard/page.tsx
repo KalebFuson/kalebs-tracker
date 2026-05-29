@@ -41,18 +41,18 @@ export default async function DashboardPage() {
       {/* Row 2 — Stat cards */}
       <DashboardStatCards stats={data.stats} />
 
-      {/* Row 3+ — Two columns: left (Upcoming Tasks) | right (Calendar + Teams + Activity) */}
+      {/* Row 3+ — Two columns: left (Upcoming Tasks + Activity) | right (Calendar + Teams) */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {/* Left column — wider, takes 2/3 */}
-        <div className="lg:col-span-2">
+        <div className="flex flex-col gap-5 lg:col-span-2">
           <UpcomingTasksList tasks={data.upcomingTasks} orgSlug={data.orgSlug} />
+          <RecentActivityFeed events={data.recentEvents} />
         </div>
 
-        {/* Right column — stacks Calendar → My Teams → Recent Activity */}
+        {/* Right column — Calendar → My Teams */}
         <div className="flex flex-col gap-5">
           <DashboardCalendar datesWithTasks={data.datesWithTasks} />
           <MyTeamsPanel teams={data.teams} />
-          <RecentActivityFeed events={data.recentEvents} />
         </div>
       </div>
     </div>

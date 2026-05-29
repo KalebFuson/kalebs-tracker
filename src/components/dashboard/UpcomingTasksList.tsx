@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CalendarDays, LayoutGrid } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,11 +23,11 @@ const priorityStyles: Record<TaskPriority, string> = {
 };
 
 const statusStyles: Record<TaskStatus, string> = {
-  todo: "bg-gray-100 text-gray-600",
-  in_progress: "bg-blue-100 text-blue-700",
-  in_review: "bg-purple-100 text-purple-700",
-  done: "bg-green-100 text-green-700",
-  blocked: "bg-red-100 text-red-700",
+  todo: "bg-gray-100 text-gray-700",
+  in_progress: "bg-blue-100 text-blue-800",
+  in_review: "bg-purple-100 text-purple-800",
+  done: "bg-emerald-100 text-emerald-800",
+  blocked: "bg-red-100 text-red-800",
 };
 
 const statusLabel: Record<TaskStatus, string> = {
@@ -55,10 +56,9 @@ export function UpcomingTasksList({ tasks, orgSlug }: UpcomingTasksListProps) {
               Tasks assigned to you due in the next 7 days.
             </p>
           </div>
-          {/* "View all tasks" will link to /tasks once that page is built */}
-          <span className="cursor-default text-sm font-medium text-indigo-600 opacity-50">
-            View all tasks
-          </span>
+          <Link href="/tasks" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+            View all tasks →
+          </Link>
         </div>
       </CardHeader>
       <CardContent className="flex-1 px-0 pb-0">

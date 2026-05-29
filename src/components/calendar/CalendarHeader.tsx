@@ -117,7 +117,7 @@ export function CalendarHeader() {
               className={cn(
                 "border-y border-border px-3 py-1.5 text-sm font-medium transition-colors",
                 atToday
-                  ? "cursor-default bg-indigo-50 text-indigo-600 opacity-70"
+                  ? "cursor-default bg-indigo-50 text-indigo-700 hover:opacity-80"
                   : "bg-white text-gray-700 hover:bg-gray-50",
               )}
             >

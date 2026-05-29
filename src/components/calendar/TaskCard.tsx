@@ -86,13 +86,13 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
           {/* Badges row */}
           <div className="mt-1.5 flex flex-wrap items-center gap-1">
             {task.team_name && (
-              <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+              <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600">
                 {task.team_name}
               </span>
             )}
             <span
               className={cn(
-                "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium",
+                "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium",
                 PRIORITY_BADGE[task.priority] ?? "bg-gray-100 text-gray-600",
               )}
             >
@@ -104,13 +104,13 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
             {task.tag_names.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-medium text-indigo-600"
+                className="rounded bg-indigo-50 px-1.5 py-0.5 text-xs font-medium text-indigo-600"
               >
                 {tag}
               </span>
             ))}
             {task.tag_names.length > 2 && (
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 +{task.tag_names.length - 2}
               </span>
             )}
@@ -131,7 +131,7 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
                   {task.assignee_name.charAt(0).toUpperCase()}
                 </div>
               )}
-              <span className="truncate text-[10px] text-gray-500">{task.assignee_name}</span>
+              <span className="truncate text-xs text-gray-600">{task.assignee_name}</span>
             </div>
           )}
         </>

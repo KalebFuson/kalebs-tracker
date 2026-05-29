@@ -45,7 +45,7 @@ export function TaskDetailMetadata({
 }: TaskDetailMetadataProps) {
   return (
     <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Details
       </p>
       <div className="space-y-3 rounded-xl border border-border bg-white p-4">

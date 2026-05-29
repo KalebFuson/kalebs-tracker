@@ -53,7 +53,7 @@ export function EditableDescription({ taskId, currentDescription }: EditableDesc
 
   return (
     <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         Description
       </p>
 

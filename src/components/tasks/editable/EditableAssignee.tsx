@@ -102,10 +102,10 @@ export function EditableAssignee({
         >
           {optimisticAssignee.id ? (
             <>
-              <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-semibold text-indigo-700">
+              <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
                 {initials(optimisticAssignee.name, optimisticAssignee.email)}
               </div>
-              <span className="min-w-0 truncate text-sm text-gray-800">
+              <span className="min-w-0 truncate text-sm font-medium text-gray-900">
                 {optimisticAssignee.name ?? optimisticAssignee.email}
               </span>
             </>
@@ -150,7 +150,7 @@ export function EditableAssignee({
                     member.id === optimisticAssignee.id && "font-semibold",
                   )}
                 >
-                  <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-semibold text-indigo-700">
+                  <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
                     {initials(member.full_name, member.email)}
                   </div>
                   <span className="truncate">{memberDisplayName(member)}</span>

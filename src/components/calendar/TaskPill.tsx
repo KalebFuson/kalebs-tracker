@@ -29,11 +29,11 @@ export function TaskPill({ task }: TaskPillProps) {
   return (
     <Link
       href={href}
-      className="flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-xs text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+      className="flex min-w-0 items-center gap-1.5 rounded px-1 py-0.5 text-xs font-medium text-gray-900 hover:bg-gray-100 transition-colors"
     >
       <span
         className={cn(
-          "size-1.5 shrink-0 rounded-full",
+          "size-2 shrink-0 rounded-full",
           PRIORITY_DOT[task.priority] ?? "bg-gray-400",
         )}
       />

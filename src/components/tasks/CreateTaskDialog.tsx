@@ -152,46 +152,59 @@ export function CreateTaskDialog({
       setIsLoadingOptions(true);
       const supabase = createClient();
 
-      const [teamsResult, membersResult] = await Promise.all([
+      // Get current user and org membership user_ids in parallel.
+      // NOTE: We deliberately do NOT join profiles from org_members here because
+      // org_members.user_id → auth.users (no direct FK to profiles), so
+      // PostgREST returns null for every profiles row and they all get filtered.
+      // Instead we fetch profiles separately with .in("id", userIds).
+      const [
+        { data: { user } },
+        teamsResult,
+        membersResult,
+      ] = await Promise.all([
+        supabase.auth.getUser(),
         supabase.from("teams").select("id, name").order("name"),
-        supabase
-          .from("org_members")
-          .select("user_id, profiles(full_name, email)")
-          .order("created_at"),
+        supabase.from("org_members").select("user_id").order("created_at"),
       ]);
+
+      const currentUserId = user?.id ?? null;
 
       if (teamsResult.data) {
         setTeams(teamsResult.data);
       }
 
-      if (membersResult.data) {
-        const options: AssigneeOption[] = membersResult.data
-          .map((row) => {
-            const profile = Array.isArray(row.profiles)
-              ? row.profiles[0]
-              : row.profiles;
+      const userIds = (membersResult.data ?? []).map((m) => m.user_id);
 
-            if (!profile || typeof profile !== "object") {
-              return null;
-            }
+      if (userIds.length > 0) {
+        const { data: profilesData } = await supabase
+          .from("profiles")
+          .select("id, full_name, email")
+          .in("id", userIds);
 
-            const fullName =
-              "full_name" in profile && typeof profile.full_name === "string"
-                ? profile.full_name
-                : null;
-            const email =
-              "email" in profile && typeof profile.email === "string"
-                ? profile.email
-                : "Unknown";
+        const options: AssigneeOption[] = (profilesData ?? []).map((profile) => {
+          const isMe = profile.id === currentUserId;
+          const name = profile.full_name?.trim() || profile.email;
+          return {
+            id: profile.id,
+            label: isMe ? `${name} (you)` : name,
+          };
+        });
 
-            return {
-              id: row.user_id,
-              label: fullName?.trim() || email,
-            };
-          })
-          .filter((item): item is AssigneeOption => item !== null);
+        // Current user first, then everyone else alphabetically.
+        options.sort((a, b) => {
+          const aIsMe = a.id === currentUserId;
+          const bIsMe = b.id === currentUserId;
+          if (aIsMe) return -1;
+          if (bIsMe) return 1;
+          return a.label.localeCompare(b.label);
+        });
 
         setAssignees(options);
+      }
+
+      // Pre-select the current user so tasks are assigned to self by default.
+      if (currentUserId) {
+        setForm((prev) => ({ ...prev, assigneeId: currentUserId }));
       }
 
       setIsLoadingOptions(false);

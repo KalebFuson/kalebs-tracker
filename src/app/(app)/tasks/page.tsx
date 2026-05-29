@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { TaskDetailSheet } from "@/components/tasks/TaskDetailSheet";
 import { TasksFilterBar } from "@/components/tasks/TasksFilterBar";
 import { TasksPageHeader } from "@/components/tasks/TasksPageHeader";
 import { TasksTable } from "@/components/tasks/TasksTable";
@@ -8,7 +7,6 @@ import { createClient } from "@/lib/supabase/server";
 import { buildTasksUrl } from "@/lib/tasks/build-url";
 import {
   getOrgMembers,
-  getTaskByNumber,
   getTasksForOrg,
   getUserTeamsForOrg,
 } from "@/lib/tasks/queries";
@@ -40,6 +38,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
   const page = Math.max(1, parseInt(String(params.page ?? "1"), 10) || 1);
   const search = String(params.search ?? "").trim();
   const taskParam = String(params.task ?? "").trim();
+  // Keep selectedTaskNumber so pagination links preserve ?task= while browsing pages
   const selectedTaskNumber = taskParam ? parseInt(taskParam, 10) : null;
 
   // Auth
@@ -72,23 +71,14 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
     getOrgMembers(orgId),
   ]);
 
-  // Fetch selected task detail if ?task= is set
-  const selectedTask =
-    selectedTaskNumber !== null
-      ? await getTaskByNumber(orgId, selectedTaskNumber)
-      : null;
-
   // Serializable params object — safe to pass as a prop to client components
   const urlParams = { filter, sort, search, page, task: selectedTaskNumber };
 
-  // Pagination URLs (plain strings — also safe as props)
+  // Pagination URLs
   const hasPrev = page > 1;
   const hasNext = page * DEFAULT_PAGE_SIZE < tasksResult.total;
   const prevPageHref = hasPrev ? buildTasksUrl(urlParams, { page: String(page - 1) }) : null;
   const nextPageHref = hasNext ? buildTasksUrl(urlParams, { page: String(page + 1) }) : null;
-
-  // URL for closing the side panel (plain string)
-  const closeHref = buildTasksUrl(urlParams, { task: null });
 
   return (
     <div className="flex flex-col gap-5 p-6">
@@ -110,14 +100,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
         orgMembers={orgMembers}
         currentUserId={user.id}
       />
-
-      <TaskDetailSheet
-        task={selectedTask}
-        orgSlug={orgSlug}
-        closeHref={closeHref}
-        orgMembers={orgMembers}
-        currentUserId={user.id}
-      />
+      {/* TaskDetailSheet is now rendered globally in (app)/layout.tsx */}
     </div>
   );
 }

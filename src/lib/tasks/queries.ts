@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import type {
   ActivityMetadata,
   OrgMember,
-  SortOption,
   TaskActivity,
   TaskDetail,
   TaskListItem,
@@ -197,7 +196,7 @@ export async function getTasksForOrg(
     }
   }
 
-  let tasks: TaskListItem[] = (rawTasks as RawTaskRow[]).map((raw) => {
+  const tasks: TaskListItem[] = (rawTasks as RawTaskRow[]).map((raw) => {
     const team = resolveTeam(raw.teams);
     const profile = raw.assignee_id ? (profileMap[raw.assignee_id] ?? null) : null;
     const subtasks = raw.subtasks ?? [];

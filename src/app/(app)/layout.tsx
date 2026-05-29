@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { AppShell } from "@/components/app-shell/AppShell";
+import { GlobalTaskSheet } from "@/components/app-shell/GlobalTaskSheet";
 import { Toaster } from "@/components/ui/sonner";
 import { createClient } from "@/lib/supabase/server";
+import { getOrgMembers } from "@/lib/tasks/queries";
 import type { Organization, Profile } from "@/types/app";
 
 type OrgMemberRow = {
@@ -46,6 +49,12 @@ export default async function AppLayout({
     ? (orgRelation[0] ?? null)
     : (orgRelation ?? null);
 
+  const orgId = membership?.org_id ?? null;
+  const orgSlug = organization?.slug ?? "";
+
+  // Pre-fetch org members once here so the global sheet can edit assignees
+  const orgMembers = orgId ? await getOrgMembers(orgId) : [];
+
   return (
     <AppShell
       user={{ id: user.id, email: user.email }}
@@ -54,6 +63,17 @@ export default async function AppLayout({
     >
       {children}
       <Toaster position="bottom-right" richColors />
+      {/* Global task detail sheet — works on every page via ?task=N */}
+      {orgId && (
+        <Suspense>
+          <GlobalTaskSheet
+            orgId={orgId}
+            orgSlug={orgSlug}
+            orgMembers={orgMembers}
+            currentUserId={user.id}
+          />
+        </Suspense>
+      )}
     </AppShell>
   );
 }

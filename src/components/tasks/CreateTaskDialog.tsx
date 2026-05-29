@@ -78,6 +78,8 @@ type AssigneeOption = {
 type CreateTaskDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Pre-selects this team when the dialog opens (e.g. from team detail page) */
+  defaultTeamId?: string | null;
 };
 
 type CreateTaskFormState = {
@@ -131,8 +133,12 @@ function FieldLabel({
 export function CreateTaskDialog({
   open,
   onOpenChange,
+  defaultTeamId,
 }: CreateTaskDialogProps) {
-  const [form, setForm] = useState<CreateTaskFormState>(initialFormState);
+  const [form, setForm] = useState<CreateTaskFormState>({
+    ...initialFormState,
+    teamId: defaultTeamId ?? null,
+  });
   const [titleError, setTitleError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [teams, setTeams] = useState<TeamOption[]>([]);
@@ -203,18 +209,21 @@ export function CreateTaskDialog({
       }
 
       // Pre-select the current user so tasks are assigned to self by default.
-      if (currentUserId) {
-        setForm((prev) => ({ ...prev, assigneeId: currentUserId }));
-      }
+      // Also apply defaultTeamId each time the dialog opens.
+      setForm((prev) => ({
+        ...prev,
+        assigneeId: currentUserId ?? prev.assigneeId,
+        teamId: defaultTeamId ?? prev.teamId,
+      }));
 
       setIsLoadingOptions(false);
     }
 
     void loadOptions();
-  }, [open]);
+  }, [open, defaultTeamId]);
 
   function resetForm() {
-    setForm(initialFormState);
+    setForm({ ...initialFormState, teamId: defaultTeamId ?? null });
     setTitleError(null);
     setFormError(null);
   }

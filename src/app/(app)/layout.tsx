@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { AppShell } from "@/components/app-shell/AppShell";
+import { Toaster } from "@/components/ui/sonner";
 import { createClient } from "@/lib/supabase/server";
 import type { Organization, Profile } from "@/types/app";
 
@@ -52,6 +53,7 @@ export default async function AppLayout({
       organization={organization}
     >
       {children}
+      <Toaster position="bottom-right" richColors />
     </AppShell>
   );
 }

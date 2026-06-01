@@ -3,6 +3,7 @@
 import { Download, Plus } from "lucide-react";
 import { useState } from "react";
 
+import { CreateFromTextModal } from "@/components/tasks/CreateFromTextModal";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
 import { Button } from "@/components/ui/button";
 
@@ -26,6 +27,7 @@ export function TasksPageHeader() {
             <Download className="size-4" />
             Export
           </Button>
+          <CreateFromTextModal />
           <Button
             className="bg-indigo-600 text-white hover:bg-indigo-700"
             onClick={() => setDialogOpen(true)}

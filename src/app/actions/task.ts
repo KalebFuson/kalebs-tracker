@@ -161,3 +161,38 @@ export async function createTask(
     return { ok: false, error: message };
   }
 }
+
+export type BulkCreateResult = {
+  created: number;
+  failed: { title: string; error: string }[];
+};
+
+export async function createTasksFromExtraction(
+  tasks: {
+    title: string;
+    description?: string | null;
+    due_date?: string | null;
+    priority: TaskPriority;
+    team_id?: string | null;
+    assignee_id?: string | null;
+  }[],
+): Promise<BulkCreateResult> {
+  const result: BulkCreateResult = { created: 0, failed: [] };
+  for (const t of tasks) {
+    const res = await createTask({
+      title: t.title,
+      description: t.description ?? null,
+      teamId: t.team_id ?? null,
+      assigneeId: t.assignee_id ?? null,
+      dueDate: t.due_date ?? null,
+      status: "todo",
+      priority: t.priority,
+    });
+    if (res.ok) {
+      result.created += 1;
+    } else {
+      result.failed.push({ title: t.title, error: res.error });
+    }
+  }
+  return result;
+}

@@ -10,11 +10,16 @@ import { cn } from "@/lib/utils";
 import type { TeamListItem } from "@/types/teams";
 
 import { AvatarStack } from "./AvatarStack";
+import { getTeamJoinState } from "@/lib/teams/join-state";
+
+import { RequestToJoinButton } from "./RequestToJoinButton";
 import { TeamSettingsDialog } from "./TeamSettingsDialog";
 
 type TeamCardProps = {
   team: TeamListItem;
   isAdmin: boolean;
+  memberTeamIds: string[];
+  pendingTeamIds: string[];
 };
 
 const DEPT_COLORS: Record<string, string> = {
@@ -28,7 +33,8 @@ const DEPT_COLORS: Record<string, string> = {
   Other: "bg-gray-100 text-gray-600",
 };
 
-export function TeamCard({ team, isAdmin }: TeamCardProps) {
+export function TeamCard({ team, isAdmin, memberTeamIds, pendingTeamIds }: TeamCardProps) {
+  const joinState = getTeamJoinState(team.id, memberTeamIds, pendingTeamIds);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const deptColor = team.department
@@ -89,7 +95,14 @@ export function TeamCard({ team, isAdmin }: TeamCardProps) {
         </div>
 
         {/* Divider + stats */}
-        <div className="border-t border-border px-5 py-3">
+        <div className="relative z-10 border-t border-border px-5 py-3">
+          <div className="mb-3 flex justify-end">
+            <RequestToJoinButton
+              teamId={team.id}
+              joinState={joinState}
+              className="relative z-10"
+            />
+          </div>
           <div className="flex items-center gap-6">
             {/* Members */}
             <div className="flex flex-col gap-1">

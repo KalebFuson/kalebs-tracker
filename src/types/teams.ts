@@ -80,3 +80,17 @@ export type SentInvitation = {
 export type SendInvitationsResult =
   | { ok: true; invitations: SentInvitation[] }
   | { ok: false; error: string };
+
+export type JoinContextForUser = {
+  memberTeamIds: string[];
+  pendingTeamIds: string[];
+};
+
+export type PendingJoinRequest = {
+  id: string;
+  user_id: string;
+  team_id: string;
+  created_at: string;
+  full_name: string | null;
+  email: string;
+};

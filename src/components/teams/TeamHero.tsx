@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { TeamDetail } from "@/types/teams";
 
 import { AvatarStack } from "./AvatarStack";
+import { getTeamJoinState } from "@/lib/teams/join-state";
 import { TeamHeroActions } from "./TeamHeroActions";
 
 const DEPT_COLORS: Record<string, string> = {
@@ -28,9 +29,12 @@ function teamInitials(name: string): string {
 type TeamHeroProps = {
   team: TeamDetail;
   isAdmin: boolean;
+  memberTeamIds: string[];
+  pendingTeamIds: string[];
 };
 
-export function TeamHero({ team, isAdmin }: TeamHeroProps) {
+export function TeamHero({ team, isAdmin, memberTeamIds, pendingTeamIds }: TeamHeroProps) {
+  const joinState = getTeamJoinState(team.id, memberTeamIds, pendingTeamIds);
   const gradient =
     team.department
       ? (DEPT_COLORS[team.department] ?? "from-gray-400 to-gray-500")
@@ -47,7 +51,7 @@ export function TeamHero({ team, isAdmin }: TeamHeroProps) {
           <ArrowLeft className="size-4" />
           Back to Teams
         </Link>
-        <TeamHeroActions team={team} isAdmin={isAdmin} />
+        <TeamHeroActions team={team} isAdmin={isAdmin} joinState={joinState} />
       </div>
 
       {/* Hero row */}

@@ -13,9 +13,16 @@ import { TeamCard } from "./TeamCard";
 type TeamsGridProps = {
   teams: TeamListItem[];
   isAdmin: boolean;
+  memberTeamIds: string[];
+  pendingTeamIds: string[];
 };
 
-export function TeamsGrid({ teams, isAdmin }: TeamsGridProps) {
+export function TeamsGrid({
+  teams,
+  isAdmin,
+  memberTeamIds,
+  pendingTeamIds,
+}: TeamsGridProps) {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -86,7 +93,13 @@ export function TeamsGrid({ teams, isAdmin }: TeamsGridProps) {
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((team) => (
-            <TeamCard key={team.id} team={team} isAdmin={isAdmin} />
+            <TeamCard
+              key={team.id}
+              team={team}
+              isAdmin={isAdmin}
+              memberTeamIds={memberTeamIds}
+              pendingTeamIds={pendingTeamIds}
+            />
           ))}
         </div>
       )}

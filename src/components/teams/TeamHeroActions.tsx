@@ -6,20 +6,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { TeamDetail } from "@/types/teams";
 
+import type { TeamJoinState } from "@/lib/teams/join-state";
+
 import { NewTaskButton } from "./NewTaskButton";
+import { RequestToJoinButton } from "./RequestToJoinButton";
 import { TeamSettingsDialog } from "./TeamSettingsDialog";
 
 type TeamHeroActionsProps = {
   team: TeamDetail;
   isAdmin: boolean;
+  joinState: TeamJoinState;
 };
 
-export function TeamHeroActions({ team, isAdmin }: TeamHeroActionsProps) {
+export function TeamHeroActions({ team, isAdmin, joinState }: TeamHeroActionsProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <>
       <div className="flex items-center gap-2">
+        <RequestToJoinButton teamId={team.id} joinState={joinState} />
         {isAdmin && (
           <Button
             variant="outline"

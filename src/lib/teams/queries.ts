@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import type {
+  JoinContextForUser,
   OrgTeam,
+  PendingJoinRequest,
   TeamDetail,
   TeamEvent,
   TeamListItem,
@@ -194,6 +196,65 @@ export async function getOrgTeamsList(orgId: string): Promise<OrgTeam[]> {
     .eq("org_id", orgId)
     .order("name");
   return data ?? [];
+}
+
+export async function getJoinContextForUser(
+  orgId: string,
+  userId: string,
+): Promise<JoinContextForUser> {
+  const supabase = await createClient();
+
+  const [memberRes, pendingRes, teamsRes] = await Promise.all([
+    supabase.from("team_members").select("team_id").eq("user_id", userId),
+    supabase
+      .from("team_join_requests")
+      .select("team_id")
+      .eq("user_id", userId)
+      .eq("status", "pending"),
+    supabase.from("teams").select("id").eq("org_id", orgId),
+  ]);
+
+  const orgTeamIds = new Set((teamsRes.data ?? []).map((t) => t.id));
+
+  const memberTeamIds = (memberRes.data ?? [])
+    .map((m) => m.team_id)
+    .filter((id) => orgTeamIds.has(id));
+
+  const pendingTeamIds = (pendingRes.data ?? [])
+    .map((r) => r.team_id)
+    .filter((id) => orgTeamIds.has(id));
+
+  return { memberTeamIds, pendingTeamIds };
+}
+
+export async function getPendingJoinRequestsForTeam(
+  teamId: string,
+): Promise<PendingJoinRequest[]> {
+  const supabase = await createClient();
+
+  const { data: rows, error } = await supabase
+    .from("team_join_requests")
+    .select("id, user_id, team_id, created_at")
+    .eq("team_id", teamId)
+    .eq("status", "pending")
+    .order("created_at", { ascending: true });
+
+  if (error || !rows?.length) return [];
+
+  const userIds = [...new Set(rows.map((r) => r.user_id))];
+  const profileMap = await fetchProfiles(supabase, userIds);
+
+  return rows.map((r) => {
+    const p = profileMap[r.user_id];
+    return {
+      id: r.id,
+      user_id: r.user_id,
+      team_id: r.team_id,
+      created_at: r.created_at,
+      full_name: p?.full_name ?? null,
+      email: p?.email ?? "",
+    };
+  });
 }
 
 /** Return the org_id for a given team (for permission checks in actions) */

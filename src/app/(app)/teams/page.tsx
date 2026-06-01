@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { TeamsGrid } from "@/components/teams/TeamsGrid";
 import { createClient } from "@/lib/supabase/server";
-import { getTeamsForOrg } from "@/lib/teams/queries";
+import { getJoinContextForUser, getTeamsForOrg } from "@/lib/teams/queries";
 
 export const metadata = { title: "Teams" };
 
@@ -26,11 +26,20 @@ export default async function TeamsPage() {
   if (!orgId) redirect("/login");
 
   const isAdmin = membership.role === "admin";
-  const teams = await getTeamsForOrg(orgId);
+
+  const [teams, joinContext] = await Promise.all([
+    getTeamsForOrg(orgId),
+    getJoinContextForUser(orgId, user.id),
+  ]);
 
   return (
     <div className="p-6">
-      <TeamsGrid teams={teams} isAdmin={isAdmin} />
+      <TeamsGrid
+        teams={teams}
+        isAdmin={isAdmin}
+        memberTeamIds={joinContext.memberTeamIds}
+        pendingTeamIds={joinContext.pendingTeamIds}
+      />
     </div>
   );
 }

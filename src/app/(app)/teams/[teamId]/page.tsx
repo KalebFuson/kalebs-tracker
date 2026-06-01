@@ -3,13 +3,18 @@ import { Suspense } from "react";
 
 import { TeamActivityCard } from "@/components/teams/TeamActivityCard";
 import { TeamHero } from "@/components/teams/TeamHero";
+import { PendingJoinRequestsCard } from "@/components/teams/PendingJoinRequestsCard";
 import { TeamMembersCard } from "@/components/teams/TeamMembersCard";
 import { TeamStatsCard } from "@/components/teams/TeamStatsCard";
 import { TeamTabs } from "@/components/teams/TeamTabs";
 import { TeamTasksTab } from "@/components/teams/TeamTasksTab";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgMembers } from "@/lib/tasks/queries";
-import { getTeamById } from "@/lib/teams/queries";
+import {
+  getJoinContextForUser,
+  getPendingJoinRequestsForTeam,
+  getTeamById,
+} from "@/lib/teams/queries";
 import { getTasksForOrg } from "@/lib/tasks/queries";
 
 type TeamDetailPageProps = {
@@ -40,20 +45,34 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
   const orgId = membership?.org_id;
   if (!orgId) redirect("/login");
 
-  const isAdmin = membership.role === "admin";
+  const isOrgAdmin = membership.role === "admin";
 
-  // Parallel data fetching
-  const [team, orgMembers] = await Promise.all([
+  const [team, orgMembers, joinContext] = await Promise.all([
     getTeamById(teamId),
     getOrgMembers(orgId),
+    getJoinContextForUser(orgId, user.id),
   ]);
 
   if (!team) notFound();
 
+  const isTeamAdmin = team.members.some(
+    (m) => m.user_id === user.id && m.role === "admin",
+  );
+  const canReviewJoinRequests = isOrgAdmin || isTeamAdmin;
+
+  const pendingJoinRequests = canReviewJoinRequests
+    ? await getPendingJoinRequestsForTeam(teamId)
+    : [];
+
   return (
     <div className="flex flex-col gap-4 p-6">
       {/* Hero */}
-      <TeamHero team={team} isAdmin={isAdmin} />
+      <TeamHero
+        team={team}
+        isAdmin={isOrgAdmin}
+        memberTeamIds={joinContext.memberTeamIds}
+        pendingTeamIds={joinContext.pendingTeamIds}
+      />
 
       {/* Tabs bar */}
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-xs">
@@ -71,12 +90,15 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
 
               {/* Right: members, stats */}
               <div className="flex flex-col gap-4">
+                {canReviewJoinRequests && (
+                  <PendingJoinRequestsCard requests={pendingJoinRequests} />
+                )}
                 <TeamMembersCard
                   teamId={team.id}
                   members={team.members}
                   orgMembers={orgMembers}
                   currentUserId={user.id}
-                  isAdmin={isAdmin}
+                  isAdmin={isOrgAdmin}
                 />
                 <TeamStatsCard team={team} />
               </div>

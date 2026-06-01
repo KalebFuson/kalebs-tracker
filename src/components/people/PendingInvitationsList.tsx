@@ -21,7 +21,7 @@ function CopyLinkButton({ token }: { token: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-1.5 rounded px-2 py-1 text-xs font-medium text-indigo-600 hover:bg-indigo-50 transition-colors"
+      className="inline-flex items-center gap-1.5 rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
       title="Copy invite link"
     >
       {copied ? (
@@ -133,7 +133,7 @@ export function PendingInvitationsList({ invitations }: PendingInvitationsListPr
                 <span
                   className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
                     inv.role === "admin"
-                      ? "bg-indigo-100 text-indigo-700"
+                      ? "bg-primary/15 text-primary"
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >

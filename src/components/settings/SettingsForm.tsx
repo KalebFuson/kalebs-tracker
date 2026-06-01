@@ -117,7 +117,7 @@ export function SettingsForm({ initial }: SettingsFormProps) {
           type="button"
           onClick={handleSave}
           disabled={!dirty || isPending}
-          className="gap-2 bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="gap-2 disabled:opacity-50"
         >
           <Save className="size-4" />
           {isPending ? "Saving…" : "Save Changes"}

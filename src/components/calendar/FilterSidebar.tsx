@@ -5,24 +5,31 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { clearFilters, parseFilterState, toggleMultiParam } from "@/lib/calendar/filters";
+import {
+  PRIORITY_DOT,
+  PRIORITY_LABEL,
+  STATUS_DOT,
+  STATUS_LABEL,
+} from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { OrgTag, QuickView } from "@/types/calendar";
 import type { OrgMember, TaskPriority, TaskStatus } from "@/types/tasks";
 
-const STATUS_OPTIONS: { value: TaskStatus; label: string; dot: string }[] = [
-  { value: "todo", label: "To Do", dot: "bg-gray-400" },
-  { value: "in_progress", label: "In Progress", dot: "bg-blue-500" },
-  { value: "in_review", label: "In Review", dot: "bg-purple-500" },
-  { value: "done", label: "Done", dot: "bg-green-500" },
-  { value: "blocked", label: "Blocked", dot: "bg-red-500" },
-];
+const STATUS_OPTIONS: { value: TaskStatus; label: string; dot: string }[] = (
+  ["todo", "in_progress", "in_review", "done", "blocked"] as TaskStatus[]
+).map((value) => ({
+  value,
+  label: STATUS_LABEL[value],
+  dot: STATUS_DOT[value],
+}));
 
-const PRIORITY_OPTIONS: { value: TaskPriority; label: string; dot: string }[] = [
-  { value: "urgent", label: "Urgent", dot: "bg-red-500" },
-  { value: "high", label: "High", dot: "bg-orange-500" },
-  { value: "medium", label: "Medium", dot: "bg-amber-500" },
-  { value: "low", label: "Low", dot: "bg-gray-400" },
-];
+const PRIORITY_OPTIONS: { value: TaskPriority; label: string; dot: string }[] = (
+  ["urgent", "high", "medium", "low"] as TaskPriority[]
+).map((value) => ({
+  value,
+  label: PRIORITY_LABEL[value],
+  dot: PRIORITY_DOT[value],
+}));
 
 const QUICK_VIEWS: { value: QuickView; label: string }[] = [
   { value: "all", label: "All company tasks" },
@@ -111,7 +118,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
         {hasActiveFilters && (
           <button
             onClick={handleClearAll}
-            className="text-xs font-medium text-indigo-600 hover:underline"
+            className="text-xs font-medium text-primary hover:underline"
           >
             Clear all
           </button>
@@ -134,7 +141,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                   value={qv.value}
                   checked={isActive}
                   onChange={() => setQuickView(qv.value)}
-                  className="accent-indigo-600"
+                  className="accent-primary"
                 />
                 {qv.label}
               </label>
@@ -157,7 +164,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => toggleStatus(opt.value)}
-                  className="rounded accent-indigo-600"
+                  className="rounded accent-primary"
                 />
                 <span className={cn("size-2 shrink-0 rounded-full", opt.dot)} />
                 {opt.label}
@@ -181,7 +188,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => togglePriority(opt.value)}
-                  className="rounded accent-indigo-600"
+                  className="rounded accent-primary"
                 />
                 <span className={cn("size-2 shrink-0 rounded-full", opt.dot)} />
                 {opt.label}
@@ -204,8 +211,8 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                   className={cn(
                     "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors border",
                     isActive
-                      ? "border-indigo-600 bg-indigo-600 text-white"
-                      : "border-border bg-white text-gray-600 hover:border-indigo-300 hover:text-indigo-600",
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-white text-gray-600 hover:border-primary/40 hover:text-primary",
                   )}
                 >
                   {tag.name}
@@ -233,7 +240,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                     type="checkbox"
                     checked={isChecked}
                     onChange={() => toggleAssignee(member.id)}
-                    className="rounded accent-indigo-600"
+                    className="rounded accent-primary"
                   />
                   {member.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -243,7 +250,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
                       className="size-5 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex size-5 items-center justify-center rounded-full bg-indigo-200 text-[9px] font-bold text-indigo-700 shrink-0">
+                    <div className="flex size-5 items-center justify-center rounded-full bg-primary/15 text-[9px] font-bold text-primary shrink-0">
                       {name.charAt(0).toUpperCase()}
                     </div>
                   )}

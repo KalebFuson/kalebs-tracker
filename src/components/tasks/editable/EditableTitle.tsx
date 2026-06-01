@@ -61,7 +61,7 @@ export function EditableTitle({ taskId, currentTitle }: EditableTitleProps) {
         onChange={(e) => setDraft(e.target.value)}
         onBlur={save}
         onKeyDown={handleKeyDown}
-        className="w-full rounded border border-indigo-300 bg-white px-2 py-1 text-3xl font-bold leading-snug text-gray-900 outline-none ring-2 ring-indigo-200"
+        className="w-full rounded border border-primary/40 bg-white px-2 py-1 text-3xl font-bold leading-snug text-gray-900 outline-none ring-2 ring-primary/20"
       />
     );
   }

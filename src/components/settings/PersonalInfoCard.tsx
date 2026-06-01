@@ -25,7 +25,7 @@ function UserInitialsAvatar({ name }: { name: string }) {
       : trimmed.slice(0, 2).toUpperCase() || "?";
 
   return (
-    <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-2xl font-bold text-white ring-4 ring-indigo-100">
+    <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground ring-4 ring-primary/20">
       {initials}
     </div>
   );
@@ -131,7 +131,7 @@ export function PersonalInfoCard({
               teams.map((t) => (
                 <span
                   key={t.id}
-                  className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700"
+                  className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
                 >
                   {t.name}
                 </span>
@@ -139,7 +139,7 @@ export function PersonalInfoCard({
             )}
             <Link
               href="/teams"
-              className="rounded-full border border-dashed border-indigo-300 px-3 py-1 text-xs font-medium text-indigo-600 hover:border-indigo-500 hover:bg-indigo-50 transition-colors"
+              className="rounded-full border border-dashed border-primary/40 px-3 py-1 text-xs font-medium text-primary hover:border-primary hover:bg-primary/10 transition-colors"
             >
               Browse Teams →
             </Link>

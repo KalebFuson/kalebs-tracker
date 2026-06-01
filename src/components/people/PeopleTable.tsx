@@ -65,7 +65,7 @@ export function PeopleTable({
         {isAdmin && (
           <Button
             size="sm"
-            className="shrink-0 gap-1.5 bg-indigo-600 text-white hover:bg-indigo-700"
+            className="shrink-0 gap-1.5"
             onClick={() => setInviteOpen(true)}
           >
             <Plus className="size-3.5" />
@@ -104,7 +104,7 @@ export function PeopleTable({
               className={cn(
                 "px-5 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors",
                 t.id === tab
-                  ? "border-indigo-600 text-indigo-600"
+                  ? "border-primary text-primary"
                   : "border-transparent text-gray-500 hover:text-gray-700",
               )}
             >
@@ -128,7 +128,7 @@ export function PeopleTable({
                   className={cn(
                     "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                     roleFilter === f.id
-                      ? "bg-indigo-100 text-indigo-700"
+                      ? "bg-primary/15 text-primary"
                       : "text-gray-500 hover:bg-gray-100",
                   )}
                 >

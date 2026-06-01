@@ -9,32 +9,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  STATUS_BADGE,
+  STATUS_DOT,
+  STATUS_LABEL,
+} from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { TaskStatus } from "@/types/tasks";
 
-const STATUS_OPTIONS: { value: TaskStatus; label: string; dot: string }[] = [
-  { value: "todo", label: "To Do", dot: "bg-gray-400" },
-  { value: "in_progress", label: "In Progress", dot: "bg-blue-500" },
-  { value: "in_review", label: "In Review", dot: "bg-purple-500" },
-  { value: "done", label: "Done", dot: "bg-green-500" },
-  { value: "blocked", label: "Blocked", dot: "bg-red-500" },
+const STATUS_OPTION_VALUES: TaskStatus[] = [
+  "todo",
+  "in_progress",
+  "in_review",
+  "done",
+  "blocked",
 ];
 
-const STATUS_BADGE: Record<TaskStatus, string> = {
-  todo: "bg-gray-100 text-gray-700",
-  in_progress: "bg-blue-100 text-blue-800",
-  in_review: "bg-purple-100 text-purple-800",
-  done: "bg-emerald-100 text-emerald-800",
-  blocked: "bg-red-100 text-red-800",
-};
-
-const STATUS_LABEL: Record<TaskStatus, string> = {
-  todo: "To Do",
-  in_progress: "In Progress",
-  in_review: "In Review",
-  done: "Done",
-  blocked: "Blocked",
-};
+const STATUS_OPTIONS = STATUS_OPTION_VALUES.map((value) => ({
+  value,
+  label: STATUS_LABEL[value],
+  dot: STATUS_DOT[value],
+}));
 
 type EditableStatusProps = {
   taskId: string;

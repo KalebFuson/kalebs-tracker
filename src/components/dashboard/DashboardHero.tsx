@@ -53,7 +53,7 @@ export function DashboardHero({ displayName, stats }: DashboardHeroProps) {
           </div>
           <Button
             onClick={() => setDialogOpen(true)}
-            className="shrink-0 bg-indigo-600 text-white hover:bg-indigo-700"
+            className="shrink-0"
           >
             <Plus className="size-4" />
             Create New Task

@@ -39,7 +39,7 @@ export function CreateOrgForm() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <Card className="w-full max-w-md shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-indigo-600">
+          <CardTitle className="text-2xl font-bold text-primary">
             Create organization
           </CardTitle>
           <CardDescription>
@@ -86,7 +86,7 @@ export function CreateOrgForm() {
             <div className="flex gap-3">
               <Button
                 type="submit"
-                className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700"
+                className="flex-1"
                 disabled={isPending}
               >
                 {isPending ? "Creating…" : "Create organization"}

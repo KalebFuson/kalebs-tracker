@@ -52,7 +52,7 @@ function ErrorCard({ icon, title, message }: ErrorCardProps) {
           </div>
           <Link
             href="/login"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+            className="text-sm font-medium text-primary hover:text-primary/80 hover:underline"
           >
             Back to login →
           </Link>
@@ -138,12 +138,12 @@ export default async function AcceptInvitePage({ params }: AcceptInvitePageProps
       <PageShell>
         <Card className="shadow-sm">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-indigo-100">
-              <Mail className="size-6 text-indigo-600" />
+            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/15">
+              <Mail className="size-6 text-primary" />
             </div>
             <CardTitle className="text-xl">
               {"You've been invited to join"}{" "}
-              <span className="text-indigo-600">{invitation.org_name}</span>
+              <span className="text-primary">{invitation.org_name}</span>
             </CardTitle>
             <CardDescription>
               {"You've been invited as a "}
@@ -169,7 +169,7 @@ export default async function AcceptInvitePage({ params }: AcceptInvitePageProps
               </div>
             )}
             <Link href={signupHref} className="block">
-              <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-700">
+              <Button className="w-full">
                 Create account
               </Button>
             </Link>
@@ -212,7 +212,7 @@ export default async function AcceptInvitePage({ params }: AcceptInvitePageProps
             <form action={handleSignOut}>
               <Button
                 type="submit"
-                className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+                className="w-full"
               >
                 Sign out and accept with correct account
               </Button>
@@ -233,11 +233,11 @@ export default async function AcceptInvitePage({ params }: AcceptInvitePageProps
     <PageShell>
       <Card className="shadow-sm">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-indigo-100">
-            <Mail className="size-6 text-indigo-600" />
+          <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/15">
+            <Mail className="size-6 text-primary" />
           </div>
           <CardTitle className="text-xl">
-            Join <span className="text-indigo-600">{invitation.org_name}</span>?
+            Join <span className="text-primary">{invitation.org_name}</span>?
           </CardTitle>
           <CardDescription>
             {"You've been invited as a "}

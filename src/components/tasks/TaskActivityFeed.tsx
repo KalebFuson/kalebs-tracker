@@ -92,7 +92,7 @@ export function TaskActivityFeed({ activity }: TaskActivityFeedProps) {
 
             return (
               <li key={item.id} className="flex items-start gap-3">
-                <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
+                <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
                   {initials}
                 </div>
                 <div>

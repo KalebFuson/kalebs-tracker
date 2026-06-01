@@ -35,7 +35,7 @@ export default async function OnboardingPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <Card className="w-full max-w-lg shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-indigo-600">
+          <CardTitle className="text-2xl font-bold text-primary">
             Welcome to Kalebs Tracker
           </CardTitle>
           <CardDescription>
@@ -46,11 +46,11 @@ export default async function OnboardingPage() {
           <Button
             render={<Link href="/onboarding/create-org" />}
             nativeButton={false}
-            className="h-auto w-full justify-start bg-indigo-600 px-4 py-6 text-left text-white hover:bg-indigo-700"
+            className="h-auto w-full justify-start px-4 py-6 text-left"
           >
             <div>
               <p className="font-semibold">Create a new organization</p>
-              <p className="mt-1 text-sm font-normal text-indigo-100">
+              <p className="mt-1 text-sm font-normal text-primary-foreground/80">
                 Set up a workspace for your team
               </p>
             </div>

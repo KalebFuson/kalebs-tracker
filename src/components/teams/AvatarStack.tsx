@@ -31,7 +31,7 @@ export function AvatarStack({ members, max = 3, size = "md" }: AvatarStackProps)
         <div
           key={m.user_id}
           className={cn(
-            "rounded-full ring-2 ring-white overflow-hidden shrink-0 bg-indigo-200 flex items-center justify-center font-semibold text-indigo-700",
+            "rounded-full ring-2 ring-white overflow-hidden shrink-0 bg-primary/15 flex items-center justify-center font-semibold text-primary",
             sizeClass,
           )}
           title={m.full_name ?? undefined}

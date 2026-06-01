@@ -168,7 +168,6 @@ export function CreateTeamDialog({ open, onOpenChange }: CreateTeamDialogProps) 
             </Button>
             <Button
               type="submit"
-              className="bg-indigo-600 text-white hover:bg-indigo-700"
               disabled={isPending}
             >
               {isPending ? "Creating…" : "Create team"}

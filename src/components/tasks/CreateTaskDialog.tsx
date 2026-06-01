@@ -427,7 +427,7 @@ export function CreateTaskDialog({
                       />
                     }
                   >
-                    <CalendarIcon className="size-3.5 shrink-0 text-indigo-600" />
+                    <CalendarIcon className="size-3.5 shrink-0 text-primary" />
                     <span className="truncate">
                       {form.dueDate
                         ? format(form.dueDate, "MMM d, yyyy")
@@ -511,7 +511,6 @@ export function CreateTaskDialog({
             </Button>
             <Button
               type="submit"
-              className="bg-indigo-600 text-white hover:bg-indigo-700"
               disabled={isDisabled}
             >
               {isPending ? "Creating…" : "Create Task"}

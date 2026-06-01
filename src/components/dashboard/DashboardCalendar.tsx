@@ -1,36 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type DashboardCalendarProps = {
-  // ISO date strings (YYYY-MM-DD) for open tasks assigned to the current user
   datesWithTasks: string[];
+  selectedDay?: string | null;
+  onSelectDay?: (day: string) => void;
 };
 
-export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
-  const router = useRouter();
+export function DashboardCalendar({
+  datesWithTasks,
+  selectedDay = null,
+  onSelectDay,
+}: DashboardCalendarProps) {
   const [month, setMonth] = useState<Date>(new Date());
 
   const taskDateSet = new Set(datesWithTasks);
 
   function handleDayClick(day: Date) {
-    router.push(`/calendar?view=day&date=${format(day, "yyyy-MM-dd")}`);
+    const iso = format(day, "yyyy-MM-dd");
+    onSelectDay?.(iso);
   }
 
   const modifiers = {
-    hasTasks: (date: Date) => {
-      const iso = date.toISOString().slice(0, 10);
-      return taskDateSet.has(iso);
-    },
+    hasTasks: (date: Date) => taskDateSet.has(format(date, "yyyy-MM-dd")),
+    selected: (date: Date) =>
+      selectedDay != null && format(date, "yyyy-MM-dd") === selectedDay,
   };
 
   const modifiersClassNames = {
     hasTasks: "rdp-has-tasks",
+    selected:
+      "ring-2 ring-primary ring-inset text-primary font-semibold rounded-md bg-transparent",
   };
 
   return (
@@ -39,7 +44,6 @@ export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
         <CardTitle className="text-base font-semibold">Calendar</CardTitle>
       </CardHeader>
       <CardContent className="px-2 pb-3">
-        {/* Inject a tiny inline style for the dot indicator on task days */}
         <style>{`
           .rdp-has-tasks::after {
             content: '';
@@ -47,8 +51,16 @@ export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
             width: 5px;
             height: 5px;
             border-radius: 9999px;
-            background-color: #4f46e5;
+            background-color: var(--primary);
             margin: 1px auto 0;
+          }
+          .dashboard-calendar [data-selected-single="true"] {
+            background: transparent !important;
+            color: var(--primary) !important;
+            font-weight: 600;
+          }
+          .dashboard-calendar .rdp-today:has([data-selected-single="true"]) {
+            background-color: transparent;
           }
         `}</style>
         <Calendar
@@ -57,7 +69,7 @@ export function DashboardCalendar({ datesWithTasks }: DashboardCalendarProps) {
           modifiers={modifiers}
           modifiersClassNames={modifiersClassNames}
           onDayClick={handleDayClick}
-          className="mx-auto w-full [&_.rdp-day]:cursor-pointer"
+          className="dashboard-calendar mx-auto w-full [&_.rdp-day]:cursor-pointer"
         />
       </CardContent>
     </Card>

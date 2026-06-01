@@ -21,9 +21,36 @@ async function getUserOrgId(
   return data?.org_id ?? null;
 }
 
+type RawTask = {
+  id: string;
+  task_number: number;
+  title: string;
+  status: string;
+  priority: string;
+  due_date: string | null;
+  teams: { name: string } | { name: string }[] | null;
+};
+
+function mapRawTasksToDashboard(rows: RawTask[]): DashboardTask[] {
+  return rows.map((t) => {
+    const teamRel = t.teams;
+    const team = Array.isArray(teamRel) ? teamRel[0] : teamRel;
+    return {
+      id: t.id,
+      task_number: t.task_number,
+      title: t.title,
+      status: t.status as DashboardTask["status"],
+      priority: t.priority as DashboardTask["priority"],
+      due_date: t.due_date,
+      team_name: team?.name ?? null,
+    };
+  });
+}
+
 export type DashboardData = {
   stats: DashboardStats;
   upcomingTasks: DashboardTask[];
+  windowTasks: DashboardTask[];
   datesWithTasks: string[];
   teams: DashboardTeam[];
   recentEvents: DashboardEvent[];
@@ -40,6 +67,7 @@ export async function getDashboardData(
     return {
       stats: { openTasks: 0, overdueTasks: 0, upcomingThisWeek: 0 },
       upcomingTasks: [],
+      windowTasks: [],
       datesWithTasks: [],
       teams: [],
       recentEvents: [],
@@ -60,7 +88,7 @@ export async function getDashboardData(
     overdueCountResult,
     upcomingCountResult,
     upcomingTasksResult,
-    calendarTasksResult,
+    windowTasksResult,
     teamsResult,
     eventsResult,
   ] = await Promise.all([
@@ -111,12 +139,10 @@ export async function getDashboardData(
       .order("due_date", { ascending: true })
       .limit(8),
 
-    // Calendar dots: open tasks with a due_date this month ± buffer
-    // Fetch all open tasks with due_date to compute dots client-side month by month.
-    // Limit to a reasonable window — 90 days.
+    // Calendar dots + day-view filter: full rows from today onward (limit 200)
     supabase
       .from("tasks")
-      .select("due_date")
+      .select("id, task_number, title, status, priority, due_date, teams(name)")
       .eq("org_id", orgId)
       .eq("assignee_id", userId)
       .neq("status", "done")
@@ -150,37 +176,20 @@ export async function getDashboardData(
 
   // Sort upcoming tasks by priority after date sort (Supabase can only order by one column natively)
   const priorityOrder: Record<string, number> = { urgent: 0, high: 1, medium: 2, low: 3 };
-  type RawTask = {
-    id: string;
-    task_number: number;
-    title: string;
-    status: string;
-    priority: string;
-    due_date: string | null;
-    teams: { name: string } | { name: string }[] | null;
-  };
-  const upcomingTasks: DashboardTask[] = (upcomingTasksResult.data as RawTask[] ?? [])
-    .sort((a, b) => {
+  const upcomingTasks: DashboardTask[] = mapRawTasksToDashboard(
+    (upcomingTasksResult.data as RawTask[] ?? []).sort((a, b) => {
       if (a.due_date !== b.due_date) return 0;
       return (priorityOrder[a.priority] ?? 99) - (priorityOrder[b.priority] ?? 99);
-    })
-    .map((t) => {
-      const teamRel = t.teams;
-      const team = Array.isArray(teamRel) ? teamRel[0] : teamRel;
-      return {
-        id: t.id,
-        task_number: t.task_number,
-        title: t.title,
-        status: t.status as DashboardTask["status"],
-        priority: t.priority as DashboardTask["priority"],
-        due_date: t.due_date,
-        team_name: team?.name ?? null,
-      };
-    });
+    }),
+  );
+
+  const windowTasks: DashboardTask[] = mapRawTasksToDashboard(
+    windowTasksResult.data as RawTask[] ?? [],
+  );
 
   const datesWithTasks = Array.from(
     new Set(
-      (calendarTasksResult.data ?? [])
+      windowTasks
         .map((t) => t.due_date)
         .filter((d): d is string => d !== null),
     ),
@@ -235,5 +244,13 @@ export async function getDashboardData(
     };
   });
 
-  return { stats, upcomingTasks, datesWithTasks, teams, recentEvents, orgSlug };
+  return {
+    stats,
+    upcomingTasks,
+    windowTasks,
+    datesWithTasks,
+    teams,
+    recentEvents,
+    orgSlug,
+  };
 }

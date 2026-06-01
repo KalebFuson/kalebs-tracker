@@ -25,21 +25,26 @@ const navItems = [
   { href: "/people", label: "People", icon: UserCircle },
 ] as const;
 
+const navLinkClass =
+  "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors";
+
 export function Sidebar() {
   const pathname = usePathname();
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
   return (
     <>
-      <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-gray-50">
+      <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground">
         <div className="border-b border-border px-5 py-5">
-          <p className="text-base font-extrabold tracking-tight text-indigo-600">Kalebs Tracker</p>
+          <p className="text-base font-extrabold tracking-tight text-primary">
+            Kalebs Tracker
+          </p>
         </div>
 
         <div className="px-3 py-4">
           <Button
             type="button"
-            className="w-full bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm"
+            className="w-full shadow-sm"
             onClick={() => setTaskDialogOpen(true)}
           >
             <Plus data-icon="inline-start" />
@@ -57,10 +62,10 @@ export function Sidebar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors border-l-[3px]",
+                  navLinkClass,
                   isActive
-                    ? "border-indigo-600 bg-white text-indigo-700 shadow-sm"
-                    : "border-transparent text-gray-600 hover:bg-white hover:text-gray-900",
+                    ? "bg-primary/10 font-semibold text-primary"
+                    : "text-sidebar-foreground/70 hover:bg-primary/5 hover:text-sidebar-foreground",
                 )}
               >
                 <Icon className="size-4 shrink-0" />
@@ -74,10 +79,10 @@ export function Sidebar() {
           <Link
             href="/settings"
             className={cn(
-              "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors border-l-[3px]",
+              navLinkClass,
               pathname === "/settings" || pathname.startsWith("/settings/")
-                ? "border-indigo-600 bg-white text-indigo-700 shadow-sm"
-                : "border-transparent text-gray-600 hover:bg-white hover:text-gray-900",
+                ? "bg-primary/10 font-semibold text-primary"
+                : "text-sidebar-foreground/70 hover:bg-primary/5 hover:text-sidebar-foreground",
             )}
           >
             <Settings className="size-4 shrink-0" />

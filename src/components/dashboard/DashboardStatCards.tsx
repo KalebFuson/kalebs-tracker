@@ -23,7 +23,7 @@ function StatCard({
   viewLabel = "View all",
   valueClassName = "text-gray-900",
   cardClassName = "",
-  iconBgClassName = "bg-indigo-50",
+  iconBgClassName = "bg-primary/10",
 }: StatCardProps) {
   return (
     <Card className={cardClassName}>
@@ -35,7 +35,7 @@ function StatCard({
         <p className={`mt-2 text-4xl font-bold ${valueClassName}`}>{value}</p>
         <Link
           href={href}
-          className="mt-3 flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700"
+          className="mt-3 flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80"
         >
           {viewLabel}
           <ArrowRight className="size-3" />
@@ -59,9 +59,9 @@ export function DashboardStatCards({ stats }: DashboardStatCardsProps) {
         value={stats.openTasks}
         href="/tasks"
         viewLabel="View all tasks"
-        icon={<CheckCircle className="size-5 text-indigo-600" />}
+        icon={<CheckCircle className="size-5 text-primary" />}
         valueClassName="text-gray-900"
-        iconBgClassName="bg-indigo-50"
+        iconBgClassName="bg-primary/10"
       />
       <StatCard
         label="Overdue Tasks"
@@ -78,9 +78,9 @@ export function DashboardStatCards({ stats }: DashboardStatCardsProps) {
         value={stats.upcomingThisWeek}
         href="/calendar"
         viewLabel="Open calendar"
-        icon={<CalendarClock className="size-5 text-indigo-600" />}
+        icon={<CalendarClock className="size-5 text-primary" />}
         valueClassName="text-gray-900"
-        iconBgClassName="bg-indigo-50"
+        iconBgClassName="bg-primary/10"
       />
     </div>
   );

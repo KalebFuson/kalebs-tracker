@@ -188,7 +188,7 @@ function SignupForm() {
       ) : null}
       <Button
         type="submit"
-        className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+        className="w-full"
         disabled={isLoading}
       >
         {isLoading ? "Creating account…" : "Create account"}
@@ -202,7 +202,7 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <Card className="w-full max-w-md shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-indigo-600">
+          <CardTitle className="text-2xl font-bold text-primary">
             Kalebs Tracker
           </CardTitle>
           <CardDescription>Create your account</CardDescription>
@@ -215,7 +215,7 @@ export default function SignupPage() {
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-700"
+              className="font-medium text-primary hover:text-primary/80"
             >
               Sign in
             </Link>

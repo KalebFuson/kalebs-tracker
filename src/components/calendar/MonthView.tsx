@@ -88,7 +88,7 @@ export function MonthView({ tasks, date, currentUserId, myTeamMemberIds }: Month
                 className={cn(
                   "mb-1 flex size-6 items-center justify-center rounded-full text-sm font-medium",
                   isCurrentDay
-                    ? "bg-indigo-600 text-white"
+                    ? "bg-primary text-primary-foreground"
                     : isCurrentMonth
                       ? "text-gray-900"
                       : "text-gray-400",
@@ -103,7 +103,7 @@ export function MonthView({ tasks, date, currentUserId, myTeamMemberIds }: Month
                   <TaskPill key={task.id} task={task} />
                 ))}
                 {overflow > 0 && (
-                  <p className="cursor-default px-1 text-xs font-medium text-indigo-600">
+                  <p className="cursor-default px-1 text-xs font-medium text-primary">
                     +{overflow} more
                   </p>
                 )}

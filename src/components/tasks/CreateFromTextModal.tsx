@@ -478,7 +478,7 @@ export function CreateFromTextModal() {
               type="button"
               onClick={() => void handleExtract()}
               disabled={status === "extracting" || rawText.trim() === ""}
-              className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+              className="w-full"
             >
               Extract
             </Button>
@@ -511,7 +511,7 @@ export function CreateFromTextModal() {
                 type="button"
                 disabled={creating || tasks.length === 0 || hasEmptyTitle}
                 onClick={() => void handleConfirm()}
-                className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+                className="w-full"
               >
                 {creating ? "Creating…" : `Confirm & Create (${tasks.length})`}
               </Button>

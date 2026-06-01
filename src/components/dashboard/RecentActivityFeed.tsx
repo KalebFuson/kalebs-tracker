@@ -37,7 +37,7 @@ export function RecentActivityFeed({ events }: RecentActivityFeedProps) {
     <Card className="flex flex-col">
       <CardHeader className="border-b border-border">
         <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-900">
-          <Activity className="size-4 text-indigo-600" />
+          <Activity className="size-4 text-primary" />
           Recent Activity
         </CardTitle>
       </CardHeader>
@@ -66,8 +66,8 @@ export function RecentActivityFeed({ events }: RecentActivityFeedProps) {
                     key={event.id}
                     className="flex items-start gap-3 border-b border-border px-4 py-3 last:border-b-0"
                   >
-                    <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-100">
-                      <span className="text-xs font-semibold text-indigo-600">
+                    <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15">
+                      <span className="text-xs font-semibold text-primary">
                         {initials}
                       </span>
                     </div>
@@ -89,7 +89,7 @@ export function RecentActivityFeed({ events }: RecentActivityFeedProps) {
             </ul>
             {/* "Load more" is a visual placeholder — pagination comes later */}
             <div className="border-t border-border px-4 py-3 text-center">
-              <span className="cursor-default text-sm font-medium text-indigo-600 opacity-50">
+              <span className="cursor-default text-sm font-medium text-primary opacity-50">
                 Load more activity
               </span>
             </div>

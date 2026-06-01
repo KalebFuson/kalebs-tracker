@@ -93,7 +93,7 @@ export function TasksFilterBar({ teams, urlParams }: TasksFilterBarProps) {
               className={cn(
                 "rounded-full px-3 py-1 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200",
               )}
             >

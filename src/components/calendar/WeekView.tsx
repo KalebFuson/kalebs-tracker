@@ -55,14 +55,14 @@ export function WeekView({ tasks, date, currentUserId, myTeamMemberIds }: WeekVi
             key={key}
             className={cn(
               "flex min-w-[150px] flex-1 flex-col border-r border-border",
-              isCurrentDay && "bg-indigo-50/20",
+              isCurrentDay && "bg-primary/10",
             )}
           >
             {/* Column header */}
             <div
               className={cn(
                 "shrink-0 border-b border-border px-3 py-2.5 text-center",
-                isCurrentDay && "bg-indigo-50",
+                isCurrentDay && "bg-primary/10",
               )}
             >
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -71,7 +71,7 @@ export function WeekView({ tasks, date, currentUserId, myTeamMemberIds }: WeekVi
               <p
                 className={cn(
                   "text-xl font-semibold leading-tight",
-                  isCurrentDay ? "text-indigo-600" : "text-gray-900",
+                  isCurrentDay ? "text-primary" : "text-gray-900",
                 )}
               >
                 {format(day, "d")}

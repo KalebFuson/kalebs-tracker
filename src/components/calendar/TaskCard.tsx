@@ -3,38 +3,14 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
+import {
+  PRIORITY_BADGE,
+  PRIORITY_DOT,
+  STATUS_DOT,
+  STATUS_LABEL,
+} from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { CalendarTask } from "@/types/calendar";
-
-const PRIORITY_DOT: Record<string, string> = {
-  urgent: "bg-red-500",
-  high: "bg-orange-500",
-  medium: "bg-amber-500",
-  low: "bg-gray-400",
-};
-
-const STATUS_DOT: Record<string, string> = {
-  todo: "bg-gray-400",
-  in_progress: "bg-blue-500",
-  in_review: "bg-purple-500",
-  done: "bg-green-500",
-  blocked: "bg-red-500",
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  todo: "To Do",
-  in_progress: "In Progress",
-  in_review: "In Review",
-  done: "Done",
-  blocked: "Blocked",
-};
-
-const PRIORITY_BADGE: Record<string, string> = {
-  urgent: "bg-red-100 text-red-700",
-  high: "bg-orange-100 text-orange-700",
-  medium: "bg-amber-100 text-amber-700",
-  low: "bg-gray-100 text-gray-600",
-};
 
 type TaskCardProps = {
   task: CalendarTask;
@@ -58,7 +34,7 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
       href={href}
       className={cn(
         "group block rounded-lg border border-border bg-white p-2.5 shadow-xs",
-        "hover:border-indigo-300 hover:shadow-sm transition-all",
+        "hover:border-primary/40 hover:shadow-sm transition-all",
         isDone && "opacity-60",
       )}
     >
@@ -67,13 +43,13 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
         <span
           className={cn(
             "mt-[3px] size-2 shrink-0 rounded-full",
-            STATUS_DOT[task.status] ?? "bg-gray-400",
+            STATUS_DOT[task.status],
           )}
           title={STATUS_LABEL[task.status]}
         />
         <p
           className={cn(
-            "font-medium text-gray-900 group-hover:text-indigo-600 transition-colors",
+            "font-medium text-gray-900 group-hover:text-primary transition-colors",
             compact ? "text-xs line-clamp-1" : "text-sm line-clamp-2",
           )}
         >
@@ -93,7 +69,7 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
             <span
               className={cn(
                 "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs font-medium",
-                PRIORITY_BADGE[task.priority] ?? "bg-gray-100 text-gray-600",
+                PRIORITY_BADGE[task.priority],
               )}
             >
               <span
@@ -104,7 +80,7 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
             {task.tag_names.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="rounded bg-indigo-50 px-1.5 py-0.5 text-xs font-medium text-indigo-600"
+                className="rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary"
               >
                 {tag}
               </span>
@@ -127,7 +103,7 @@ export function TaskCard({ task, compact = false }: TaskCardProps) {
                   className="size-4 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex size-4 items-center justify-center rounded-full bg-indigo-200 text-[8px] font-bold text-indigo-700">
+                <div className="flex size-4 items-center justify-center rounded-full bg-primary/15 text-[8px] font-bold text-primary">
                   {task.assignee_name.charAt(0).toUpperCase()}
                 </div>
               )}

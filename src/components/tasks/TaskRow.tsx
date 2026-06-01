@@ -38,7 +38,7 @@ export function TaskRow({
       <tr
         className={cn(
           "group/row border-b border-border transition-colors",
-          isExpanded ? "bg-indigo-50/40" : "hover:bg-gray-50",
+          isExpanded ? "bg-primary/10" : "hover:bg-gray-50",
         )}
       >
         {/* Expand chevron */}
@@ -59,7 +59,7 @@ export function TaskRow({
         {/* Title */}
         <td className="py-3 pr-4">
           <Link href={taskDetailHref} className="group/title block">
-            <p className="text-sm font-medium text-gray-900 group-hover/title:text-indigo-600 transition-colors">
+            <p className="text-sm font-medium text-gray-900 group-hover/title:text-primary transition-colors">
               {task.title}
             </p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">{taskKey}</p>
@@ -94,7 +94,7 @@ export function TaskRow({
 
       {/* Expanded inline detail */}
       {isExpanded && (
-        <tr className="border-b border-border bg-indigo-50/30">
+        <tr className="border-b border-border bg-primary/10">
           <td />
           <td colSpan={5} className="pb-4 pt-2 pr-6">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -133,7 +133,7 @@ export function TaskRow({
 
             <Link
               href={taskDetailHref}
-              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
             >
               View Full Task Details
               <ChevronRight className="size-3.5" />

@@ -58,7 +58,7 @@ export function EditableDescription({ taskId, currentDescription }: EditableDesc
       </p>
 
       {isEditing ? (
-        <div className="rounded-xl border border-indigo-300 bg-white p-4 ring-2 ring-indigo-100">
+        <div className="rounded-xl border border-primary/40 bg-white p-4 ring-2 ring-primary/20">
           <textarea
             ref={textareaRef}
             value={draft}
@@ -84,7 +84,7 @@ export function EditableDescription({ taskId, currentDescription }: EditableDesc
           onClick={startEditing}
           title="Click to edit description"
           className={cn(
-            "min-h-[80px] cursor-text rounded-xl border border-border bg-white p-4 transition-colors hover:border-indigo-200 hover:bg-indigo-50/30",
+            "min-h-[80px] cursor-text rounded-xl border border-border bg-white p-4 transition-colors hover:border-primary/30 hover:bg-primary/10",
             isPending && "opacity-60",
           )}
         >

@@ -10,22 +10,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  PRIORITY_BADGE,
+  PRIORITY_DOT,
+  PRIORITY_LABEL,
+} from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { TaskPriority } from "@/types/tasks";
 
-const PRIORITY_OPTIONS: { value: TaskPriority; label: string; flagClass: string }[] = [
-  { value: "urgent", label: "Urgent", flagClass: "text-red-500" },
-  { value: "high", label: "High", flagClass: "text-orange-500" },
-  { value: "medium", label: "Medium", flagClass: "text-amber-500" },
-  { value: "low", label: "Low", flagClass: "text-gray-400" },
+const PRIORITY_OPTION_VALUES: TaskPriority[] = [
+  "urgent",
+  "high",
+  "medium",
+  "low",
 ];
 
-const PRIORITY_BADGE: Record<TaskPriority, string> = {
-  urgent: "bg-red-100 text-red-700",
-  high: "bg-orange-100 text-orange-700",
-  medium: "bg-amber-100 text-amber-700",
-  low: "bg-gray-100 text-gray-600",
-};
+const PRIORITY_OPTIONS = PRIORITY_OPTION_VALUES.map((value) => ({
+  value,
+  label: PRIORITY_LABEL[value],
+  flagClass: PRIORITY_DOT[value].replace(/^bg-/, "text-"),
+}));
 
 type EditablePriorityProps = {
   taskId: string;
@@ -50,8 +54,6 @@ export function EditablePriority({ taskId, currentPriority }: EditablePriorityPr
     });
   }
 
-  const label = optimisticPriority.charAt(0).toUpperCase() + optimisticPriority.slice(1);
-
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Popover open={open} onOpenChange={setOpen}>
@@ -62,7 +64,7 @@ export function EditablePriority({ taskId, currentPriority }: EditablePriorityPr
             isPending && "opacity-60",
           )}
         >
-          {label}
+          {PRIORITY_LABEL[optimisticPriority]}
         </PopoverTrigger>
         <PopoverContent className="w-36 p-1" align="start">
           {PRIORITY_OPTIONS.map((opt) => (

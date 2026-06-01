@@ -56,7 +56,7 @@ export function TeamStatsCard({ team }: TeamStatsCardProps) {
         <div className="border-t border-border pt-3">
           <Link
             href={`/calendar?team=${team.id}`}
-            className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+            className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 hover:underline"
           >
             <CalendarDays className="size-4" />
             View team calendar →

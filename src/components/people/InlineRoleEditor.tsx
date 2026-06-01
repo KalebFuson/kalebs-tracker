@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 type Role = "member" | "admin";
 
 const ROLE_STYLES: Record<Role, string> = {
-  admin: "bg-indigo-100 text-indigo-700",
+  admin: "bg-primary/15 text-primary",
   member: "bg-gray-100 text-gray-600",
 };
 
@@ -66,7 +66,7 @@ export function InlineRoleEditor({ memberId, currentRole, editable }: InlineRole
             className="flex items-center justify-between capitalize"
           >
             {role}
-            {role === currentRole && <Check className="size-3.5 text-indigo-600" />}
+            {role === currentRole && <Check className="size-3.5 text-primary" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

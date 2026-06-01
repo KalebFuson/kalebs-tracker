@@ -117,7 +117,7 @@ export function CalendarHeader() {
               className={cn(
                 "border-y border-border px-3 py-1.5 text-sm font-medium transition-colors",
                 atToday
-                  ? "cursor-default bg-indigo-50 text-indigo-700 hover:opacity-80"
+                  ? "cursor-default bg-primary/10 text-primary hover:opacity-80"
                   : "bg-white text-gray-700 hover:bg-gray-50",
               )}
             >
@@ -141,7 +141,7 @@ export function CalendarHeader() {
                 className={cn(
                   "px-3 py-1.5 text-sm font-medium transition-colors",
                   v.value === view
-                    ? "bg-indigo-600 text-white"
+                    ? "bg-primary text-primary-foreground"
                     : "bg-white text-gray-600 hover:bg-gray-50",
                 )}
               >

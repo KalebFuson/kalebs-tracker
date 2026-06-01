@@ -98,7 +98,7 @@ export function AddMemberDialog({
                   className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors"
                 >
                   {/* Avatar */}
-                  <div className="size-8 shrink-0 rounded-full overflow-hidden bg-indigo-200 flex items-center justify-center text-xs font-bold text-indigo-700">
+                  <div className="size-8 shrink-0 rounded-full overflow-hidden bg-primary/15 flex items-center justify-center text-xs font-bold text-primary">
                     {member.avatar_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={member.avatar_url} alt="" className="size-full object-cover" />

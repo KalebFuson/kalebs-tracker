@@ -78,7 +78,7 @@ export function TaskDetailSubtasks({ subtasks, completedCount }: TaskDetailSubta
         {/* Add subtask action */}
         <button
           onClick={() => console.log("Add subtask — not implemented yet")}
-          className="flex w-full items-center gap-1.5 border-t border-border px-4 py-2.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50/60"
+          className="flex w-full items-center gap-1.5 border-t border-border px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/10"
         >
           <Plus className="size-3.5" />
           Add Subtask

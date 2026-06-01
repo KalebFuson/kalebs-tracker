@@ -204,7 +204,6 @@ export function TeamSettingsDialog({
             </Button>
             <Button
               type="submit"
-              className="bg-indigo-600 text-white hover:bg-indigo-700"
               disabled={isPending}
             >
               {isSaving ? "Saving…" : "Save changes"}

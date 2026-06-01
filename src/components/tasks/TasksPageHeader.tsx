@@ -29,7 +29,6 @@ export function TasksPageHeader() {
           </Button>
           <CreateFromTextModal />
           <Button
-            className="bg-indigo-600 text-white hover:bg-indigo-700"
             onClick={() => setDialogOpen(true)}
           >
             <Plus className="size-4" />

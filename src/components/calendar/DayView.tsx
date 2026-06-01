@@ -49,7 +49,7 @@ export function DayView({ tasks, date, currentUserId, myTeamMemberIds }: DayView
           </div>
           <Button
             onClick={() => setCreateOpen(true)}
-            className="shrink-0 bg-indigo-600 text-white hover:bg-indigo-700"
+            className="shrink-0"
           >
             <Plus className="mr-1 size-4" />
             New Task Today

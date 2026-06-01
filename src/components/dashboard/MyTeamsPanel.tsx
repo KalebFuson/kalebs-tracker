@@ -33,8 +33,8 @@ export function MyTeamsPanel({ teams }: MyTeamsPanelProps) {
                 key={team.id}
                 className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-b-0"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                  <Building2 className="size-4 text-indigo-600" />
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <Building2 className="size-4 text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-gray-900">

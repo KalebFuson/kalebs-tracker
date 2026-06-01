@@ -103,7 +103,7 @@ function LoginForm() {
       ) : null}
       <Button
         type="submit"
-        className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+        className="w-full"
         disabled={isLoading}
       >
         {isLoading ? "Signing in…" : "Sign in"}
@@ -117,7 +117,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <Card className="w-full max-w-md shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-indigo-600">
+          <CardTitle className="text-2xl font-bold text-primary">
             Kalebs Tracker
           </CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
@@ -130,7 +130,7 @@ export default function LoginPage() {
             {"Don't have an account? "}
             <Link
               href="/signup"
-              className="font-medium text-indigo-600 hover:text-indigo-700"
+              className="font-medium text-primary hover:text-primary/80"
             >
               Sign up
             </Link>

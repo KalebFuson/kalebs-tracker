@@ -37,7 +37,7 @@ export function AcceptInviteButton({ token }: AcceptInviteButtonProps) {
       <Button
         onClick={handleAccept}
         disabled={isPending}
-        className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+        className="w-full"
       >
         {isPending ? "Accepting…" : "Accept invitation"}
       </Button>

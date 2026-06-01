@@ -23,7 +23,7 @@ function MemberAvatar({ name, avatar }: { name: string | null; avatar: string | 
     : "?";
 
   return (
-    <div className="size-9 shrink-0 rounded-full overflow-hidden bg-indigo-200 flex items-center justify-center text-xs font-bold text-indigo-700 ring-1 ring-border">
+    <div className="size-9 shrink-0 rounded-full overflow-hidden bg-primary/15 flex items-center justify-center text-xs font-bold text-primary ring-1 ring-border">
       {avatar ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={avatar} alt={name ?? ""} className="size-full object-cover" />

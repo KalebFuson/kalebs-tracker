@@ -18,7 +18,7 @@ export function NewTaskButton({ teamId }: NewTaskButtonProps) {
     <>
       <Button
         onClick={() => setOpen(true)}
-        className="gap-1.5 bg-indigo-600 text-white hover:bg-indigo-700"
+        className="gap-1.5"
         size="sm"
       >
         <Plus className="size-4" />

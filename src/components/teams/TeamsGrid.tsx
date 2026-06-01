@@ -41,7 +41,7 @@ export function TeamsGrid({ teams }: TeamsGridProps) {
         <div className="flex shrink-0 items-center gap-2">
           <Button
             size="sm"
-            className="gap-1.5 bg-indigo-600 text-white hover:bg-indigo-700"
+            className="gap-1.5"
             onClick={() => setCreateOpen(true)}
           >
             <Plus className="size-3.5" />

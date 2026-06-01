@@ -60,14 +60,14 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+            className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Account menu"
           >
             <Avatar size="sm">
               {profile?.avatar_url ? (
                 <AvatarImage src={profile.avatar_url} alt="" />
               ) : null}
-              <AvatarFallback className="bg-indigo-100 text-indigo-700">
+              <AvatarFallback className="bg-primary/15 text-primary">
                 {initials}
               </AvatarFallback>
             </Avatar>

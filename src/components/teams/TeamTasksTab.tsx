@@ -2,38 +2,14 @@ import Link from "next/link";
 import { CheckCircle2, Clock } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
+import {
+  PRIORITY_BADGE,
+  PRIORITY_LABEL,
+  STATUS_BADGE,
+  STATUS_DOT,
+  STATUS_LABEL,
+} from "@/lib/task-styles";
 import type { TaskListItem } from "@/types/tasks";
-
-const STATUS_DOT: Record<string, string> = {
-  todo: "bg-gray-400",
-  in_progress: "bg-blue-500",
-  in_review: "bg-purple-500",
-  done: "bg-green-500",
-  blocked: "bg-red-500",
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  todo: "To Do",
-  in_progress: "In Progress",
-  in_review: "In Review",
-  done: "Done",
-  blocked: "Blocked",
-};
-
-const STATUS_BADGE: Record<string, string> = {
-  todo: "bg-gray-100 text-gray-600",
-  in_progress: "bg-blue-100 text-blue-700",
-  in_review: "bg-purple-100 text-purple-700",
-  done: "bg-green-100 text-green-700",
-  blocked: "bg-red-100 text-red-700",
-};
-
-const PRIORITY_BADGE: Record<string, string> = {
-  urgent: "bg-red-100 text-red-700",
-  high: "bg-orange-100 text-orange-700",
-  medium: "bg-amber-100 text-amber-700",
-  low: "bg-gray-100 text-gray-600",
-};
 
 function formatDate(dateStr: string | null): string | null {
   if (!dateStr) return null;
@@ -91,7 +67,7 @@ export function TeamTasksTab({ tasks, teamId }: TeamTasksTabProps) {
                   href={`/teams/${teamId}?task=${task.task_number}`}
                   className="group block"
                 >
-                  <p className="text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors">
+                  <p className="text-sm font-medium text-gray-900 group-hover:text-primary transition-colors">
                     {task.title}
                   </p>
                   {task.assignee_name && (
@@ -103,19 +79,19 @@ export function TeamTasksTab({ tasks, teamId }: TeamTasksTabProps) {
               </td>
               <td className="py-3 pr-4">
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[task.status] ?? "bg-gray-100 text-gray-600"}`}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[task.status]}`}
                 >
                   <span
-                    className={`size-1.5 rounded-full ${STATUS_DOT[task.status] ?? "bg-gray-400"}`}
+                    className={`size-1.5 rounded-full ${STATUS_DOT[task.status]}`}
                   />
-                  {STATUS_LABEL[task.status] ?? task.status}
+                  {STATUS_LABEL[task.status]}
                 </span>
               </td>
               <td className="py-3 pr-4">
                 <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${PRIORITY_BADGE[task.priority] ?? "bg-gray-100 text-gray-600"}`}
+                  className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${PRIORITY_BADGE[task.priority]}`}
                 >
-                  {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                  {PRIORITY_LABEL[task.priority]}
                 </span>
               </td>
               <td className="py-3 pr-4">

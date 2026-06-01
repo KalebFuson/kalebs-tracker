@@ -17,14 +17,14 @@ function Checkbox({ className, ...props }: CheckboxProps) {
       className={cn(
         "peer size-4 shrink-0 rounded border border-input shadow-xs transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        "data-[checked]:border-indigo-600 data-[checked]:bg-indigo-600 data-[checked]:text-white",
+        "data-[checked]:border-primary data-[checked]:bg-primary data-[checked]:text-primary-foreground",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
     >
       <CheckboxPrimitive.Indicator className="flex items-center justify-center">
-        <Check className="size-3 text-white" strokeWidth={3} />
+        <Check className="size-3 text-primary-foreground" strokeWidth={3} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

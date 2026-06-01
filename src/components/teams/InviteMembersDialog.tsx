@@ -158,7 +158,6 @@ export function InviteMembersDialog({
 
             <DialogFooter>
               <Button
-                className="bg-indigo-600 text-white hover:bg-indigo-700"
                 onClick={() => handleOpenChange(false)}
               >
                 Done
@@ -196,22 +195,22 @@ export function InviteMembersDialog({
                     className={cn(
                       "flex flex-col items-start gap-1 rounded-lg border p-3.5 text-left transition-all",
                       role === r
-                        ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500"
-                        : "border-border bg-white hover:border-indigo-300",
+                        ? "border-primary bg-primary/10 ring-1 ring-primary"
+                        : "border-border bg-white hover:border-primary/40",
                     )}
                   >
                     <div className="flex w-full items-center justify-between">
                       <div className="flex items-center gap-2">
                         {r === "member" ? (
-                          <User className="size-4 text-indigo-600" />
+                          <User className="size-4 text-primary" />
                         ) : (
-                          <Shield className="size-4 text-indigo-600" />
+                          <Shield className="size-4 text-primary" />
                         )}
                         <span className="text-sm font-semibold capitalize text-gray-900">
                           {r}
                         </span>
                       </div>
-                      {role === r && <Check className="size-4 text-indigo-600" />}
+                      {role === r && <Check className="size-4 text-primary" />}
                     </div>
                     <p className="text-xs text-muted-foreground">
                       {r === "member"
@@ -256,7 +255,7 @@ export function InviteMembersDialog({
                 Cancel
               </Button>
               <Button
-                className="gap-2 bg-indigo-600 text-white hover:bg-indigo-700"
+                className="gap-2"
                 onClick={handleSubmit}
                 disabled={isPending}
               >

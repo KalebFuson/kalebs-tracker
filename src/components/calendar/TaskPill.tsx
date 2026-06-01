@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
+import { PRIORITY_DOT } from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { CalendarTask } from "@/types/calendar";
-
-const PRIORITY_DOT: Record<string, string> = {
-  urgent: "bg-red-500",
-  high: "bg-orange-500",
-  medium: "bg-amber-500",
-  low: "bg-gray-400",
-};
 
 type TaskPillProps = {
   task: CalendarTask;
@@ -34,7 +28,7 @@ export function TaskPill({ task }: TaskPillProps) {
       <span
         className={cn(
           "size-2 shrink-0 rounded-full",
-          PRIORITY_DOT[task.priority] ?? "bg-gray-400",
+          PRIORITY_DOT[task.priority],
         )}
       />
       <span className="truncate">{task.title}</span>

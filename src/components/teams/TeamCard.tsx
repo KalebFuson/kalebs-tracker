@@ -41,7 +41,7 @@ export function TeamCard({ team }: TeamCardProps) {
         {/* Stretched link covers the whole card except interactive elements */}
         <Link
           href={`/teams/${team.id}`}
-          className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-2 focus-visible:outline-indigo-500"
+          className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-2 focus-visible:outline-primary"
           aria-label={`Open ${team.name}`}
         />
 

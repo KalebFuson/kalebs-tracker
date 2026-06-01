@@ -102,7 +102,7 @@ export function EditableAssignee({
         >
           {optimisticAssignee.id ? (
             <>
-              <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
+              <div className="size-6 shrink-0 rounded-full bg-primary/15 flex items-center justify-center text-xs font-semibold text-primary">
                 {initials(optimisticAssignee.name, optimisticAssignee.email)}
               </div>
               <span className="min-w-0 truncate text-sm font-medium text-gray-900">
@@ -123,7 +123,7 @@ export function EditableAssignee({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search members..."
-              className="w-full rounded border border-input bg-background py-1.5 pl-7 pr-2 text-sm outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded border border-input bg-background py-1.5 pl-7 pr-2 text-sm outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -133,7 +133,7 @@ export function EditableAssignee({
               onClick={() =>
                 handleSelect(orgMembers.find((m) => m.id === currentUserId) ?? null)
               }
-              className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm text-indigo-600 hover:bg-indigo-50"
+              className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm text-primary hover:bg-primary/10"
             >
               Assign to me
             </button>
@@ -150,7 +150,7 @@ export function EditableAssignee({
                     member.id === optimisticAssignee.id && "font-semibold",
                   )}
                 >
-                  <div className="size-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
+                  <div className="size-6 shrink-0 rounded-full bg-primary/15 flex items-center justify-center text-xs font-semibold text-primary">
                     {initials(member.full_name, member.email)}
                   </div>
                   <span className="truncate">{memberDisplayName(member)}</span>

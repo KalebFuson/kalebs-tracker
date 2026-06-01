@@ -11,6 +11,10 @@ import type { OrgMember } from "@/types/tasks";
 import type { TeamMember } from "@/types/teams";
 
 import { AddMemberDialog } from "./AddMemberDialog";
+import {
+  InlineTeamRoleEditor,
+  normalizeTeamMemberRole,
+} from "./InlineTeamRoleEditor";
 
 type TeamMembersCardProps = {
   teamId: string;
@@ -63,16 +67,18 @@ function MemberRow({
         )}
       </div>
 
-      {/* Name + role */}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-gray-900">
           {name}
           {isMe && <span className="ml-1 text-xs text-muted-foreground">(you)</span>}
         </p>
-        {member.role && (
-          <p className="truncate text-xs text-muted-foreground">{member.role}</p>
-        )}
       </div>
+
+      <InlineTeamRoleEditor
+        teamMemberId={member.id}
+        currentRole={normalizeTeamMemberRole(member.role)}
+        editable={isAdmin && !isMe}
+      />
 
       {isAdmin && (
         <button

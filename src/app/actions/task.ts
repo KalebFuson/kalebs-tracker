@@ -2,8 +2,47 @@
 
 import { unstable_noStore as noStore } from "next/cache";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { createClient } from "@/lib/supabase/server";
+
+const optionalUuidField = z.union([
+  z.string().uuid(),
+  z.literal(""),
+  z.literal("_none"),
+  z.literal("__none__"),
+  z.null(),
+  z.undefined(),
+]);
+
+const taskInputSchema = z.object({
+  title: z.string().trim().min(1, "Title is required.").max(500, "Title too long."),
+  description: z.string().trim().max(5000).nullish(),
+  teamId: optionalUuidField,
+  assigneeId: optionalUuidField,
+  status: z.enum(["todo", "in_progress", "in_review", "done", "blocked"]),
+  priority: z.enum(["low", "medium", "high", "urgent"]),
+  dueDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format.")
+    .nullish(),
+});
+
+const bulkExtractionSchema = z.object({
+  tasks: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1).max(500),
+        description: z.string().trim().max(5000).nullish(),
+        due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(),
+        priority: z.enum(["low", "medium", "high", "urgent"]),
+        team_id: z.string().uuid().nullish(),
+        assignee_id: z.string().uuid().nullish(),
+      }),
+    )
+    .min(1, "No tasks provided.")
+    .max(50, "Too many tasks in one request (max 50)."),
+});
 
 export type TaskStatus =
   | "todo"
@@ -56,14 +95,19 @@ export async function createTask(
   input: CreateTaskInput,
 ): Promise<CreateTaskResult> {
   try {
+    const parsed = taskInputSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        ok: false,
+        error: parsed.error.issues[0]?.message ?? "Invalid task input.",
+      };
+    }
+
     noStore();
 
     console.log("[createTask] starting");
 
-    const title = input.title.trim();
-    if (!title) {
-      return { ok: false, error: "Title is required." };
-    }
+    const title = parsed.data.title.trim();
 
     const supabase = await createClient();
     const {
@@ -100,16 +144,16 @@ export async function createTask(
       };
     }
 
-    const description = input.description?.trim() || null;
-    const teamId = toUuidOrNull(input.teamId);
-    const assigneeId = toUuidOrNull(input.assigneeId);
-    const dueDate = toDateOrNull(input.dueDate);
+    const description = parsed.data.description?.trim() || null;
+    const teamId = toUuidOrNull(parsed.data.teamId);
+    const assigneeId = toUuidOrNull(parsed.data.assigneeId);
+    const dueDate = toDateOrNull(parsed.data.dueDate);
 
     console.log("[createTask] form values:", {
       title,
       description,
-      status: input.status,
-      priority: input.priority,
+      status: parsed.data.status,
+      priority: parsed.data.priority,
       due_date: dueDate,
       team_id: teamId,
       assignee_id: assigneeId,
@@ -124,8 +168,8 @@ export async function createTask(
           description,
           team_id: teamId,
           assignee_id: assigneeId,
-          status: input.status,
-          priority: input.priority,
+          status: parsed.data.status,
+          priority: parsed.data.priority,
           due_date: dueDate,
           created_by: user.id,
         })
@@ -177,8 +221,21 @@ export async function createTasksFromExtraction(
     assignee_id?: string | null;
   }[],
 ): Promise<BulkCreateResult> {
+  const parsed = bulkExtractionSchema.safeParse({ tasks });
+  if (!parsed.success) {
+    return {
+      created: 0,
+      failed: [
+        {
+          title: "(validation)",
+          error: parsed.error.issues[0]?.message ?? "Invalid input.",
+        },
+      ],
+    };
+  }
+
   const result: BulkCreateResult = { created: 0, failed: [] };
-  for (const t of tasks) {
+  for (const t of parsed.data.tasks) {
     const res = await createTask({
       title: t.title,
       description: t.description ?? null,

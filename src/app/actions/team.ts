@@ -48,6 +48,38 @@ async function requireOrgAdminForTeam(
   return requireOrgAdmin(supabase, userId, team.org_id);
 }
 
+async function isCallerTeamAdmin(
+  supabase: SupabaseServerClient,
+  userId: string,
+  teamId: string,
+): Promise<boolean> {
+  const { data: team } = await supabase
+    .from("teams")
+    .select("org_id")
+    .eq("id", teamId)
+    .maybeSingle();
+
+  if (!team) return false;
+
+  const { data: orgMember } = await supabase
+    .from("org_members")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("org_id", team.org_id)
+    .maybeSingle();
+
+  if (orgMember?.role === "admin") return true;
+
+  const { data: teamMember } = await supabase
+    .from("team_members")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("team_id", teamId)
+    .maybeSingle();
+
+  return teamMember?.role === "admin";
+}
+
 export async function createTeam(input: CreateTeamInput): Promise<CreateTeamResult> {
   noStore();
 
@@ -301,6 +333,121 @@ export async function deleteTeam(teamId: string): Promise<ActionResult> {
 
   revalidatePath("/teams");
   revalidatePath("/dashboard");
+
+  return { ok: true };
+}
+
+export async function requestToJoinTeam(teamId: string): Promise<ActionResult> {
+  noStore();
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) return { ok: false, error: "Not signed in." };
+
+  const { data: existingMember } = await supabase
+    .from("team_members")
+    .select("id")
+    .eq("team_id", teamId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existingMember) {
+    return { ok: false, error: "You are already a member of this team." };
+  }
+
+  const { error } = await supabase.from("team_join_requests").insert({
+    team_id: teamId,
+    user_id: user.id,
+  });
+
+  if (error) {
+    if (error.code === "23505") {
+      return { ok: false, error: "You already have a pending request to join this team." };
+    }
+    return { ok: false, error: error.message };
+  }
+
+  revalidatePath(`/teams/${teamId}`);
+  revalidatePath("/teams");
+
+  return { ok: true };
+}
+
+export async function respondToJoinRequest(
+  requestId: string,
+  decision: "approved" | "denied",
+): Promise<ActionResult> {
+  noStore();
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) return { ok: false, error: "Not signed in." };
+
+  const { data: request, error: requestError } = await supabase
+    .from("team_join_requests")
+    .select("id, team_id, user_id, status")
+    .eq("id", requestId)
+    .maybeSingle();
+
+  if (requestError || !request) {
+    return { ok: false, error: "Request not found." };
+  }
+
+  const canRespond = await isCallerTeamAdmin(supabase, user.id, request.team_id);
+  if (!canRespond) {
+    return { ok: false, error: "Only team admins can respond to join requests." };
+  }
+
+  if (request.status !== "pending") {
+    return { ok: false, error: "This request has already been resolved." };
+  }
+
+  const resolvedAt = new Date().toISOString();
+
+  if (decision === "approved") {
+    const { error: memberError } = await supabase.from("team_members").insert({
+      team_id: request.team_id,
+      user_id: request.user_id,
+      role: "member",
+    });
+
+    if (memberError && memberError.code !== "23505") {
+      return { ok: false, error: memberError.message };
+    }
+
+    const { error: updateError } = await supabase
+      .from("team_join_requests")
+      .update({
+        status: "approved",
+        resolved_at: resolvedAt,
+        resolved_by: user.id,
+      })
+      .eq("id", requestId);
+
+    if (updateError) return { ok: false, error: updateError.message };
+  } else {
+    const { error: updateError } = await supabase
+      .from("team_join_requests")
+      .update({
+        status: "denied",
+        resolved_at: resolvedAt,
+        resolved_by: user.id,
+      })
+      .eq("id", requestId);
+
+    if (updateError) return { ok: false, error: updateError.message };
+  }
+
+  revalidatePath(`/teams/${request.team_id}`);
+  revalidatePath("/teams");
 
   return { ok: true };
 }

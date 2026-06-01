@@ -21,6 +21,7 @@ import {
   getOrgTags,
   getTasksForCalendar,
 } from "@/lib/calendar/queries";
+import { getOrgTeamsList } from "@/lib/teams/queries";
 import type { CalendarView, DateRange } from "@/types/calendar";
 
 type CalendarPageProps = {
@@ -89,11 +90,12 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
   const orgId = membership.org_id;
 
   // Parallel data fetches
-  const [tasks, orgMembers, orgTags, myTeamMemberIds] = await Promise.all([
+  const [tasks, orgMembers, orgTags, myTeamMemberIds, orgTeams] = await Promise.all([
     getTasksForCalendar(orgId, dateRange),
     getOrgMembersForCalendar(orgId),
     getOrgTags(orgId),
     getMyTeamMemberIds(orgId, user.id),
+    getOrgTeamsList(orgId),
   ]);
 
   return (
@@ -110,6 +112,7 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
           <FilterSidebar
             orgMembers={orgMembers}
             orgTags={orgTags}
+            orgTeams={orgTeams}
             currentUserId={user.id}
           />
         </Suspense>

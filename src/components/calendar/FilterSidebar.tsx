@@ -64,10 +64,16 @@ function Section({ title, children, defaultOpen = true }: SectionProps) {
 type FilterSidebarProps = {
   orgMembers: OrgMember[];
   orgTags: OrgTag[];
+  orgTeams: { id: string; name: string }[];
   currentUserId: string;
 };
 
-export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSidebarProps) {
+export function FilterSidebar({
+  orgMembers,
+  orgTags,
+  orgTeams,
+  currentUserId,
+}: FilterSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterState = parseFilterState(searchParams);
@@ -76,6 +82,7 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
     filterState.quickView !== "all" ||
     filterState.status.length > 0 ||
     filterState.priority.length > 0 ||
+    filterState.team.length > 0 ||
     filterState.tags.length > 0 ||
     filterState.assignee.length > 0;
 
@@ -96,6 +103,10 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
 
   function togglePriority(value: TaskPriority) {
     pushUrl(toggleMultiParam(searchParams, "priority", value));
+  }
+
+  function toggleTeam(teamId: string) {
+    pushUrl(toggleMultiParam(searchParams, "team", teamId));
   }
 
   function toggleTag(name: string) {
@@ -197,6 +208,31 @@ export function FilterSidebar({ orgMembers, orgTags, currentUserId }: FilterSide
           })}
         </div>
       </Section>
+
+      {/* Teams */}
+      {orgTeams.length > 0 && (
+        <Section title="Teams">
+          <div className="space-y-1">
+            {orgTeams.map((team) => {
+              const isChecked = filterState.team.includes(team.id);
+              return (
+                <label
+                  key={team.id}
+                  className="flex cursor-pointer items-center gap-2.5 rounded py-1 text-sm text-gray-700 hover:text-gray-900"
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleTeam(team.id)}
+                    className="rounded accent-primary"
+                  />
+                  {team.name}
+                </label>
+              );
+            })}
+          </div>
+        </Section>
+      )}
 
       {/* Tags */}
       {orgTags.length > 0 && (

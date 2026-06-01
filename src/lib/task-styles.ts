@@ -34,6 +34,15 @@ export const STATUS_DOT: Record<TaskStatus, string> = {
   blocked: "bg-red-500",
 };
 
+/** Left border accent for status (e.g. month calendar pills) */
+export const STATUS_BORDER: Record<TaskStatus, string> = {
+  todo: "border-l-stone-400",
+  in_progress: "border-l-blue-500",
+  in_review: "border-l-violet-500",
+  done: "border-l-emerald-500",
+  blocked: "border-l-red-500",
+};
+
 export const STATUS_LABEL: Record<TaskStatus, string> = {
   todo: "Todo",
   in_progress: "In Progress",

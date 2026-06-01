@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
-import { PRIORITY_DOT } from "@/lib/task-styles";
+import { PRIORITY_DOT, STATUS_BORDER, STATUS_LABEL } from "@/lib/task-styles";
 import { cn } from "@/lib/utils";
 import type { CalendarTask } from "@/types/calendar";
 
@@ -23,7 +23,11 @@ export function TaskPill({ task }: TaskPillProps) {
   return (
     <Link
       href={href}
-      className="flex min-w-0 items-center gap-1.5 rounded px-1 py-0.5 text-xs font-medium text-gray-900 hover:bg-gray-100 transition-colors"
+      title={`${task.title} — ${STATUS_LABEL[task.status]}`}
+      className={cn(
+        "flex min-w-0 items-center gap-1.5 rounded border-l-[3px] py-0.5 pl-1.5 pr-1 text-xs font-medium text-gray-900 transition-colors hover:bg-gray-100",
+        STATUS_BORDER[task.status],
+      )}
     >
       <span
         className={cn(

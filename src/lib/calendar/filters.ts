@@ -13,10 +13,11 @@ export function parseFilterState(searchParams: URLSearchParams): CalendarFilterS
   const quickView = (searchParams.get("quickView") ?? "all") as QuickView;
   const status = parseList(searchParams.get("status")) as TaskStatus[];
   const priority = parseList(searchParams.get("priority")) as TaskPriority[];
+  const team = parseList(searchParams.get("team"));
   const tags = parseList(searchParams.get("tags"));
   const assignee = parseList(searchParams.get("assignee"));
 
-  return { quickView, status, priority, tags, assignee };
+  return { quickView, status, priority, team, tags, assignee };
 }
 
 export function applyFilters(
@@ -41,6 +42,12 @@ export function applyFilters(
 
   if (filters.priority.length > 0) {
     result = result.filter((t) => filters.priority.includes(t.priority));
+  }
+
+  if (filters.team.length > 0) {
+    result = result.filter(
+      (t) => t.team_id != null && filters.team.includes(t.team_id),
+    );
   }
 
   if (filters.tags.length > 0) {
@@ -78,6 +85,7 @@ export function clearFilters(searchParams: URLSearchParams): URLSearchParams {
   p.delete("quickView");
   p.delete("status");
   p.delete("priority");
+  p.delete("team");
   p.delete("tags");
   p.delete("assignee");
   return p;

@@ -8,6 +8,7 @@ export type CalendarFilterState = {
   quickView: QuickView;
   status: TaskStatus[];
   priority: TaskPriority[];
+  team: string[];
   tags: string[];
   assignee: string[];
 };

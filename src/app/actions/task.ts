@@ -159,6 +159,41 @@ export async function createTask(
       assignee_id: assigneeId,
     });
 
+    if (teamId !== null) {
+      const { data: teamCheck, error: teamCheckError } = await supabase
+        .from("teams")
+        .select("id")
+        .eq("id", teamId)
+        .eq("org_id", orgId)
+        .maybeSingle();
+      if (teamCheckError) {
+        console.error("[createTask] team org check failed:", teamCheckError);
+        return { ok: false, error: "Could not verify team." };
+      }
+      if (!teamCheck) {
+        return { ok: false, error: "Selected team is not in your organization." };
+      }
+    }
+
+    if (assigneeId !== null) {
+      const { data: assigneeCheck, error: assigneeCheckError } = await supabase
+        .from("org_members")
+        .select("user_id")
+        .eq("user_id", assigneeId)
+        .eq("org_id", orgId)
+        .maybeSingle();
+      if (assigneeCheckError) {
+        console.error("[createTask] assignee org check failed:", assigneeCheckError);
+        return { ok: false, error: "Could not verify assignee." };
+      }
+      if (!assigneeCheck) {
+        return {
+          ok: false,
+          error: "Selected assignee is not in your organization.",
+        };
+      }
+    }
+
     try {
       const { data: task, error: taskError } = await supabase
         .from("tasks")

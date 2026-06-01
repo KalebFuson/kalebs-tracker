@@ -8,6 +8,46 @@ import type { CreateTeamInput, CreateTeamResult } from "@/types/teams";
 
 type ActionResult = { ok: true } | { ok: false; error: string };
 
+const ADMIN_ONLY_TEAMS_ERROR = "Only organization admins can manage teams.";
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+async function requireOrgAdmin(
+  supabase: SupabaseServerClient,
+  userId: string,
+  orgId: string,
+): Promise<ActionResult | null> {
+  const { data: membership } = await supabase
+    .from("org_members")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("org_id", orgId)
+    .maybeSingle();
+
+  if (membership?.role !== "admin") {
+    return { ok: false, error: ADMIN_ONLY_TEAMS_ERROR };
+  }
+  return null;
+}
+
+async function requireOrgAdminForTeam(
+  supabase: SupabaseServerClient,
+  userId: string,
+  teamId: string,
+): Promise<ActionResult | null> {
+  const { data: team, error: teamError } = await supabase
+    .from("teams")
+    .select("org_id")
+    .eq("id", teamId)
+    .maybeSingle();
+
+  if (teamError || !team) {
+    return { ok: false, error: "Team not found." };
+  }
+
+  return requireOrgAdmin(supabase, userId, team.org_id);
+}
+
 export async function createTeam(input: CreateTeamInput): Promise<CreateTeamResult> {
   noStore();
 
@@ -24,7 +64,7 @@ export async function createTeam(input: CreateTeamInput): Promise<CreateTeamResu
 
   const { data: membership } = await supabase
     .from("org_members")
-    .select("org_id")
+    .select("org_id, role")
     .eq("user_id", user.id)
     .order("created_at", { ascending: true })
     .limit(1)
@@ -32,6 +72,10 @@ export async function createTeam(input: CreateTeamInput): Promise<CreateTeamResu
 
   const orgId = membership?.org_id;
   if (!orgId) return { ok: false, error: "You must belong to an organization to create a team." };
+
+  if (membership.role !== "admin") {
+    return { ok: false, error: ADMIN_ONLY_TEAMS_ERROR };
+  }
 
   const { data: team, error: teamError } = await supabase
     .from("teams")
@@ -154,6 +198,9 @@ export async function updateTeam(input: UpdateTeamInput): Promise<ActionResult> 
 
   if (userError || !user) return { ok: false, error: "Not signed in." };
 
+  const adminGuard = await requireOrgAdminForTeam(supabase, user.id, input.teamId);
+  if (adminGuard) return adminGuard;
+
   const { error } = await supabase
     .from("teams")
     .update({
@@ -182,6 +229,9 @@ export async function deleteTeam(teamId: string): Promise<ActionResult> {
   } = await supabase.auth.getUser();
 
   if (userError || !user) return { ok: false, error: "Not signed in." };
+
+  const adminGuard = await requireOrgAdminForTeam(supabase, user.id, teamId);
+  if (adminGuard) return adminGuard;
 
   const { error } = await supabase.from("teams").delete().eq("id", teamId);
 

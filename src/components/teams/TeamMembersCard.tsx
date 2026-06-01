@@ -17,16 +17,19 @@ type TeamMembersCardProps = {
   members: TeamMember[];
   orgMembers: OrgMember[];
   currentUserId: string;
+  isAdmin: boolean;
 };
 
 function MemberRow({
   member,
   teamId,
   currentUserId,
+  isAdmin,
 }: {
   member: TeamMember;
   teamId: string;
   currentUserId: string;
+  isAdmin: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const isMe = member.user_id === currentUserId;
@@ -71,15 +74,16 @@ function MemberRow({
         )}
       </div>
 
-      {/* Remove */}
-      <button
-        onClick={handleRemove}
-        disabled={isPending}
-        className="shrink-0 rounded p-1 text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
-        title="Remove from team"
-      >
-        <UserMinus className="size-3.5" />
-      </button>
+      {isAdmin && (
+        <button
+          onClick={handleRemove}
+          disabled={isPending}
+          className="shrink-0 rounded p-1 text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
+          title="Remove from team"
+        >
+          <UserMinus className="size-3.5" />
+        </button>
+      )}
     </li>
   );
 }
@@ -89,6 +93,7 @@ export function TeamMembersCard({
   members,
   orgMembers,
   currentUserId,
+  isAdmin,
 }: TeamMembersCardProps) {
   const [addOpen, setAddOpen] = useState(false);
 
@@ -119,30 +124,35 @@ export function TeamMembersCard({
                   member={m}
                   teamId={teamId}
                   currentUserId={currentUserId}
+                  isAdmin={isAdmin}
                 />
               ))}
             </ul>
           )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-3 w-full gap-1.5"
-            onClick={() => setAddOpen(true)}
-            disabled={nonMembers.length === 0}
-          >
-            <UserPlus className="size-4" />
-            Add Member
-          </Button>
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3 w-full gap-1.5"
+              onClick={() => setAddOpen(true)}
+              disabled={nonMembers.length === 0}
+            >
+              <UserPlus className="size-4" />
+              Add Member
+            </Button>
+          )}
         </CardContent>
       </Card>
 
-      <AddMemberDialog
-        open={addOpen}
-        onOpenChange={setAddOpen}
-        teamId={teamId}
-        nonMembers={nonMembers}
-      />
+      {isAdmin && (
+        <AddMemberDialog
+          open={addOpen}
+          onOpenChange={setAddOpen}
+          teamId={teamId}
+          nonMembers={nonMembers}
+        />
+      )}
     </>
   );
 }

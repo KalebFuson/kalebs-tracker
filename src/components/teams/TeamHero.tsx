@@ -27,9 +27,10 @@ function teamInitials(name: string): string {
 
 type TeamHeroProps = {
   team: TeamDetail;
+  isAdmin: boolean;
 };
 
-export function TeamHero({ team }: TeamHeroProps) {
+export function TeamHero({ team, isAdmin }: TeamHeroProps) {
   const gradient =
     team.department
       ? (DEPT_COLORS[team.department] ?? "from-gray-400 to-gray-500")
@@ -46,7 +47,7 @@ export function TeamHero({ team }: TeamHeroProps) {
           <ArrowLeft className="size-4" />
           Back to Teams
         </Link>
-        <TeamHeroActions team={team} />
+        <TeamHeroActions team={team} isAdmin={isAdmin} />
       </div>
 
       {/* Hero row */}

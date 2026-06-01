@@ -34,7 +34,7 @@ export async function sendInvitations(
 
   const { data: membership } = await supabase
     .from("org_members")
-    .select("org_id")
+    .select("org_id, role")
     .eq("user_id", user.id)
     .order("created_at", { ascending: true })
     .limit(1)
@@ -42,6 +42,10 @@ export async function sendInvitations(
 
   const orgId = membership?.org_id;
   if (!orgId) return { ok: false, error: "You must belong to an organization to send invitations." };
+
+  if (membership.role !== "admin") {
+    return { ok: false, error: "Only organization admins can send invitations." };
+  }
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 

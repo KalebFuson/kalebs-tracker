@@ -16,7 +16,7 @@ export default async function TeamsPage() {
 
   const { data: membership } = await supabase
     .from("org_members")
-    .select("org_id")
+    .select("org_id, role")
     .eq("user_id", user.id)
     .order("created_at", { ascending: true })
     .limit(1)
@@ -25,11 +25,12 @@ export default async function TeamsPage() {
   const orgId = membership?.org_id;
   if (!orgId) redirect("/login");
 
+  const isAdmin = membership.role === "admin";
   const teams = await getTeamsForOrg(orgId);
 
   return (
     <div className="p-6">
-      <TeamsGrid teams={teams} />
+      <TeamsGrid teams={teams} isAdmin={isAdmin} />
     </div>
   );
 }

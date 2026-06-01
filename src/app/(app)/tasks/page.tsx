@@ -4,7 +4,6 @@ import { TasksFilterBar } from "@/components/tasks/TasksFilterBar";
 import { TasksPageHeader } from "@/components/tasks/TasksPageHeader";
 import { TasksTable } from "@/components/tasks/TasksTable";
 import { createClient } from "@/lib/supabase/server";
-import { buildTasksUrl } from "@/lib/tasks/build-url";
 import {
   getOrgMembers,
   getTasksForOrg,
@@ -73,12 +72,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
 
   // Serializable params object — safe to pass as a prop to client components
   const urlParams = { filter, sort, search, page, task: selectedTaskNumber };
-
-  // Pagination URLs
-  const hasPrev = page > 1;
-  const hasNext = page * DEFAULT_PAGE_SIZE < tasksResult.total;
-  const prevPageHref = hasPrev ? buildTasksUrl(urlParams, { page: String(page - 1) }) : null;
-  const nextPageHref = hasNext ? buildTasksUrl(urlParams, { page: String(page + 1) }) : null;
+  const totalPages = Math.max(1, Math.ceil(tasksResult.total / DEFAULT_PAGE_SIZE));
 
   return (
     <div className="flex flex-col gap-5 p-6">
@@ -92,11 +86,11 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
       <TasksTable
         tasks={tasksResult.tasks}
         total={tasksResult.total}
+        page={page}
         pageSize={DEFAULT_PAGE_SIZE}
+        totalPages={totalPages}
         orgSlug={orgSlug}
         urlParams={urlParams}
-        prevPageHref={prevPageHref}
-        nextPageHref={nextPageHref}
         orgMembers={orgMembers}
         currentUserId={user.id}
       />

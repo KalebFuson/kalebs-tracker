@@ -48,6 +48,7 @@ export type TeamForSettings = {
 
 type TeamSettingsDialogProps = {
   team: TeamForSettings;
+  isAdmin: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
@@ -60,6 +61,7 @@ type FormState = {
 
 export function TeamSettingsDialog({
   team,
+  isAdmin,
   open,
   onOpenChange,
 }: TeamSettingsDialogProps) {
@@ -211,53 +213,56 @@ export function TeamSettingsDialog({
           </DialogFooter>
         </form>
 
-        {/* Danger zone */}
-        <Separator />
-        <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-          <div>
-            <p className="text-sm font-semibold text-red-700">Danger Zone</p>
-            <p className="mt-0.5 text-xs text-red-600">
-              Deleting this team is permanent. Tasks will keep their data but lose their team
-              association.
-            </p>
-          </div>
+        {isAdmin && (
+          <>
+            <Separator />
+            <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-red-700">Danger Zone</p>
+                <p className="mt-0.5 text-xs text-red-600">
+                  Deleting this team is permanent. Tasks will keep their data but lose their team
+                  association.
+                </p>
+              </div>
 
-          {confirmingDelete ? (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-red-700">
-                Are you sure? This cannot be undone.
-              </p>
-              <div className="flex gap-2">
+              {confirmingDelete ? (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-red-700">
+                    Are you sure? This cannot be undone.
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={handleDeleteConfirm}
+                      disabled={isPending}
+                    >
+                      {isDeleting ? "Deleting…" : "Yes, delete"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setConfirmingDelete(false)}
+                      disabled={isPending}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
                 <Button
+                  type="button"
                   variant="destructive"
                   size="sm"
-                  onClick={handleDeleteConfirm}
+                  onClick={() => setConfirmingDelete(true)}
                   disabled={isPending}
                 >
-                  {isDeleting ? "Deleting…" : "Yes, delete"}
+                  Delete team
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setConfirmingDelete(false)}
-                  disabled={isPending}
-                >
-                  Cancel
-                </Button>
-              </div>
+              )}
             </div>
-          ) : (
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              onClick={() => setConfirmingDelete(true)}
-              disabled={isPending}
-            >
-              Delete team
-            </Button>
-          )}
-        </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

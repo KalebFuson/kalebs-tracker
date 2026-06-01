@@ -12,9 +12,10 @@ import { TeamCard } from "./TeamCard";
 
 type TeamsGridProps = {
   teams: TeamListItem[];
+  isAdmin: boolean;
 };
 
-export function TeamsGrid({ teams }: TeamsGridProps) {
+export function TeamsGrid({ teams, isAdmin }: TeamsGridProps) {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -38,16 +39,18 @@ export function TeamsGrid({ teams }: TeamsGridProps) {
             Manage organization structure and cross-team collaboration.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Button
-            size="sm"
-            className="gap-1.5"
-            onClick={() => setCreateOpen(true)}
-          >
-            <Plus className="size-3.5" />
-            Create Team
-          </Button>
-        </div>
+        {isAdmin && (
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Plus className="size-3.5" />
+              Create Team
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Search + view toggle row */}
@@ -83,12 +86,14 @@ export function TeamsGrid({ teams }: TeamsGridProps) {
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((team) => (
-            <TeamCard key={team.id} team={team} />
+            <TeamCard key={team.id} team={team} isAdmin={isAdmin} />
           ))}
         </div>
       )}
 
-      <CreateTeamDialog open={createOpen} onOpenChange={setCreateOpen} />
+      {isAdmin && (
+        <CreateTeamDialog open={createOpen} onOpenChange={setCreateOpen} />
+      )}
     </div>
   );
 }

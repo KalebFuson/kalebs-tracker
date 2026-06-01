@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { TaskRow } from "@/components/tasks/TaskRow";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { buildTasksUrl, type TasksUrlParams } from "@/lib/tasks/build-url";
 import type { OrgMember, TaskListItem } from "@/types/tasks";
@@ -11,11 +12,11 @@ import type { OrgMember, TaskListItem } from "@/types/tasks";
 type TasksTableProps = {
   tasks: TaskListItem[];
   total: number;
+  page: number;
   pageSize: number;
+  totalPages: number;
   orgSlug: string;
   urlParams: TasksUrlParams;
-  prevPageHref: string | null;
-  nextPageHref: string | null;
   orgMembers: OrgMember[];
   currentUserId: string;
 };
@@ -23,14 +24,15 @@ type TasksTableProps = {
 export function TasksTable({
   tasks,
   total,
+  page,
   pageSize,
+  totalPages,
   orgSlug,
   urlParams,
-  prevPageHref,
-  nextPageHref,
   orgMembers,
   currentUserId,
 }: TasksTableProps) {
+  const router = useRouter();
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   function toggleExpand(taskId: string) {
@@ -46,9 +48,19 @@ export function TasksTable({
     return buildTasksUrl(urlParams, { task: String(taskNumber), page: null });
   }
 
-  const page = urlParams.page;
+  function goToPage(targetPage: number) {
+    router.push(
+      buildTasksUrl(urlParams, {
+        page: targetPage <= 1 ? null : String(targetPage),
+      }),
+    );
+  }
+
   const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const rangeEnd = Math.min(page * pageSize, total);
+  const canPrev = page > 1;
+  const canNext = page < totalPages;
+  const showPageControls = totalPages > 1;
 
   return (
     <Card className="overflow-hidden p-0 ring-1 ring-border">
@@ -98,38 +110,40 @@ export function TasksTable({
       )}
 
       {/* Pagination */}
-      <div className="flex items-center justify-between border-t border-border px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
         <p className="text-sm text-muted-foreground">
           {total === 0
             ? "No tasks"
             : `Showing ${rangeStart} to ${rangeEnd} of ${total} tasks`}
+          {total > 0 && (
+            <span className="text-muted-foreground">
+              {" "}
+              · Page {page} of {totalPages}
+            </span>
+          )}
         </p>
-        <div className="flex items-center gap-2">
-          {prevPageHref ? (
-            <Link
-              href={prevPageHref}
-              className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+        {showPageControls && (
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={!canPrev}
+              onClick={() => goToPage(page - 1)}
             >
               Previous
-            </Link>
-          ) : (
-            <span className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-gray-300 cursor-not-allowed">
-              Previous
-            </span>
-          )}
-          {nextPageHref ? (
-            <Link
-              href={nextPageHref}
-              className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={!canNext}
+              onClick={() => goToPage(page + 1)}
             >
               Next
-            </Link>
-          ) : (
-            <span className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-gray-300 cursor-not-allowed">
-              Next
-            </span>
-          )}
-        </div>
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );

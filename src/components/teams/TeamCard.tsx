@@ -14,6 +14,7 @@ import { TeamSettingsDialog } from "./TeamSettingsDialog";
 
 type TeamCardProps = {
   team: TeamListItem;
+  isAdmin: boolean;
 };
 
 const DEPT_COLORS: Record<string, string> = {
@@ -27,7 +28,7 @@ const DEPT_COLORS: Record<string, string> = {
   Other: "bg-gray-100 text-gray-600",
 };
 
-export function TeamCard({ team }: TeamCardProps) {
+export function TeamCard({ team, isAdmin }: TeamCardProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const deptColor = team.department
@@ -61,19 +62,20 @@ export function TeamCard({ team }: TeamCardProps) {
               <span />
             )}
 
-            {/* Settings gear — z-10 so it sits above the stretched link */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative z-10 size-7 text-muted-foreground opacity-0 group-hover/card:opacity-100 hover:text-gray-900 transition-opacity"
-              onClick={(e) => {
-                e.preventDefault();
-                setSettingsOpen(true);
-              }}
-              title="Team settings"
-            >
-              <Settings className="size-4" />
-            </Button>
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative z-10 size-7 text-muted-foreground opacity-0 group-hover/card:opacity-100 hover:text-gray-900 transition-opacity"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSettingsOpen(true);
+                }}
+                title="Team settings"
+              >
+                <Settings className="size-4" />
+              </Button>
+            )}
           </div>
 
           {/* Name */}
@@ -120,11 +122,14 @@ export function TeamCard({ team }: TeamCardProps) {
         </div>
       </Card>
 
-      <TeamSettingsDialog
-        team={team}
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-      />
+      {isAdmin && (
+        <TeamSettingsDialog
+          team={team}
+          isAdmin={isAdmin}
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+        />
+      )}
     </>
   );
 }

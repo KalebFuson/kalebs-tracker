@@ -31,7 +31,7 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
 
   const { data: membership } = await supabase
     .from("org_members")
-    .select("org_id")
+    .select("org_id, role")
     .eq("user_id", user.id)
     .order("created_at", { ascending: true })
     .limit(1)
@@ -39,6 +39,8 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
 
   const orgId = membership?.org_id;
   if (!orgId) redirect("/login");
+
+  const isAdmin = membership.role === "admin";
 
   // Parallel data fetching
   const [team, orgMembers] = await Promise.all([
@@ -51,7 +53,7 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
   return (
     <div className="flex flex-col gap-4 p-6">
       {/* Hero */}
-      <TeamHero team={team} />
+      <TeamHero team={team} isAdmin={isAdmin} />
 
       {/* Tabs bar */}
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-xs">
@@ -74,6 +76,7 @@ export default async function TeamDetailPage({ params, searchParams }: TeamDetai
                   members={team.members}
                   orgMembers={orgMembers}
                   currentUserId={user.id}
+                  isAdmin={isAdmin}
                 />
                 <TeamStatsCard team={team} />
               </div>

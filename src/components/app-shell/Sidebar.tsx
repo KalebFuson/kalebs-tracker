@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Caveat } from "next/font/google";
 import {
   Calendar,
   CheckSquare,
@@ -25,13 +26,19 @@ const navItems = [
 const navLinkClass =
   "flex items-center gap-3 rounded-lg py-2 pl-[10px] pr-3 text-sm font-medium transition-colors";
 
+const wordmarkFont = Caveat({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-wordmark",
+});
+
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground">
-      <div className="border-b border-border px-5 py-5">
-        <p className="text-base font-extrabold tracking-tight text-primary">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-primary/10 text-sidebar-foreground">
+      <div className="flex h-14 items-center justify-center border-b border-border px-5">
+        <p className={`${wordmarkFont.variable} text-3xl leading-none text-primary [font-family:var(--font-wordmark)]`}>
           Kalebs Tracker
         </p>
       </div>
@@ -52,8 +59,8 @@ export function Sidebar() {
               className={cn(
                 navLinkClass,
                 isActive
-                  ? "bg-primary/10 font-semibold text-primary"
-                  : "text-sidebar-foreground/70 hover:bg-primary/5 hover:text-sidebar-foreground",
+                  ? "font-semibold text-primary"
+                  : "text-foreground/70 hover:text-foreground",
               )}
             >
               <Icon className="size-4 shrink-0" />
@@ -69,8 +76,8 @@ export function Sidebar() {
           className={cn(
             navLinkClass,
             pathname === "/settings" || pathname.startsWith("/settings/")
-              ? "bg-primary/10 font-semibold text-primary"
-              : "text-sidebar-foreground/70 hover:bg-primary/5 hover:text-sidebar-foreground",
+              ? "font-semibold text-primary"
+              : "text-foreground/70 hover:text-foreground",
           )}
         >
           <Settings className="size-4 shrink-0" />

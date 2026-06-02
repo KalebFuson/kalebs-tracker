@@ -357,8 +357,8 @@ export function CreateTaskDialog({
 
             <Separator />
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              <div className="min-w-0 space-y-1.5">
+            <div className="flex flex-wrap items-start gap-3">
+              <div className="flex flex-1 min-w-[150px] flex-col gap-1.5">
                 <FieldLabel icon={User}>Assignee</FieldLabel>
                 <Select
                   value={form.assigneeId ?? SELECT_NONE}
@@ -384,7 +384,7 @@ export function CreateTaskDialog({
                 </Select>
               </div>
 
-              <div className="min-w-0 space-y-1.5">
+              <div className="flex flex-1 min-w-[150px] flex-col gap-1.5">
                 <FieldLabel icon={Users}>Team</FieldLabel>
                 <Select
                   value={form.teamId ?? SELECT_NONE}
@@ -410,7 +410,7 @@ export function CreateTaskDialog({
                 </Select>
               </div>
 
-              <div className="min-w-0 space-y-1.5">
+              <div className="flex flex-1 min-w-[150px] flex-col gap-1.5">
                 <FieldLabel icon={CalendarIcon}>Due Date</FieldLabel>
                 <Popover>
                   <PopoverTrigger
@@ -421,7 +421,7 @@ export function CreateTaskDialog({
                         disabled={isDisabled}
                         className={cn(
                           fieldControlClass,
-                          "justify-start px-2.5 font-normal shadow-none",
+                          "h-9 justify-start px-2.5 font-normal shadow-none",
                           !form.dueDate && "text-muted-foreground",
                         )}
                       />
@@ -446,7 +446,7 @@ export function CreateTaskDialog({
                 </Popover>
               </div>
 
-              <div className="min-w-0 space-y-1.5">
+              <div className="flex flex-1 min-w-[150px] flex-col gap-1.5">
                 <FieldLabel icon={CircleDot}>Status</FieldLabel>
                 <Select
                   value={form.status}
@@ -470,7 +470,7 @@ export function CreateTaskDialog({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="min-w-0 space-y-1.5">
+              <div className="flex flex-1 min-w-[150px] flex-col gap-1.5">
                 <FieldLabel icon={Flag}>Priority</FieldLabel>
                 <Select
                   value={form.priority}

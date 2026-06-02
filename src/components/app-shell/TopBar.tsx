@@ -27,14 +27,14 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
   const initials = getInitials(profile, user.email);
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-4 border-b border-border bg-white px-6">
+    <header className="flex h-14 shrink-0 items-center gap-4 border-b border-primary/30 bg-primary px-6 text-primary-foreground">
       <div className="flex flex-1 justify-center">
         <div className="relative w-full max-w-md">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-primary-foreground/80" />
           <Input
             type="search"
             placeholder="Search tasks, people..."
-            className="bg-gray-50 pl-9"
+            className="border-white/35 bg-white/35 pl-9 text-primary-foreground/80 placeholder:text-primary-foreground/80 disabled:opacity-100"
             disabled
             aria-label="Search tasks, people"
           />
@@ -43,7 +43,7 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
 
       <div className="flex items-center gap-2">
         {organization ? (
-          <span className="hidden text-sm text-muted-foreground sm:inline">
+          <span className="hidden text-sm text-primary-foreground/95 sm:inline">
             {organization.name}
           </span>
         ) : null}
@@ -52,7 +52,7 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
           type="button"
           variant="ghost"
           size="icon"
-          className="text-muted-foreground"
+          className="text-primary-foreground/90 hover:bg-white/15 hover:text-primary-foreground"
           aria-label="Notifications"
         >
           <Bell className="size-5" />
@@ -67,7 +67,7 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
               {profile?.avatar_url ? (
                 <AvatarImage src={profile.avatar_url} alt="" />
               ) : null}
-              <AvatarFallback className="bg-primary/15 text-primary">
+              <AvatarFallback className="bg-white/20 text-primary-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>

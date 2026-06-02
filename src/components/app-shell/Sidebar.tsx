@@ -43,11 +43,11 @@ export function Sidebar() {
         </p>
       </div>
 
-      <div className="px-3 py-4">
+      <div className="px-3 py-4" data-tour="create-task">
         <CreateTaskMenu label="Create Task" className="w-full shadow-sm" />
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-2">
+      <nav className="flex-1 space-y-0.5 px-2" data-tour="nav">
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive =
             pathname === href || pathname.startsWith(`${href}/`);
@@ -56,6 +56,7 @@ export function Sidebar() {
             <Link
               key={href}
               href={href}
+              data-tour={label === "Teams" ? "teams" : undefined}
               className={cn(
                 navLinkClass,
                 isActive

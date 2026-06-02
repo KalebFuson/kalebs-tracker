@@ -4,8 +4,6 @@ import OpenAI from "openai";
 
 import { createClient } from "@/lib/supabase/server";
 
-const client = new OpenAI();
-
 export type ExtractedTask = {
   title: string;
   description: string | null;
@@ -143,6 +141,7 @@ export async function extractTasksFromText(
   const dateReference = buildDateReference(timezone);
 
   try {
+    const client = new OpenAI();
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0,

@@ -39,7 +39,7 @@ export function DashboardCalendar({
   };
 
   return (
-    <Card>
+    <Card data-tour="calendar">
       <CardHeader>
         <CardTitle className="text-base font-semibold">Calendar</CardTitle>
       </CardHeader>

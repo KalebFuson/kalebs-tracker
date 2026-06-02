@@ -2,6 +2,7 @@ export type Profile = {
   full_name: string | null;
   avatar_url: string | null;
   email: string;
+  has_completed_onboarding: boolean;
 };
 
 export type Organization = {

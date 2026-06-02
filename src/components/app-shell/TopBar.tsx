@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { getInitials } from "@/lib/initials";
 import type { AppShellUser, Organization, Profile } from "@/types/app";
+import { relaunchOnboardingTour } from "@/components/onboarding/OnboardingFlow";
 
 type TopBarProps = {
   user: AppShellUser;
@@ -78,6 +79,11 @@ export function TopBar({ user, profile, organization }: TopBarProps) {
               nativeButton={false}
             >
               Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => relaunchOnboardingTour()}
+            >
+              Take the tour
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

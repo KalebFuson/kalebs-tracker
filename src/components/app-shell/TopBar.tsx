@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Bell } from "lucide-react";
 
 import { signOut } from "@/app/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { getInitials } from "@/lib/initials";
 import type { AppShellUser, Organization, Profile } from "@/types/app";
 import { relaunchOnboardingTour } from "@/components/onboarding/OnboardingFlow";
@@ -24,25 +24,29 @@ type TopBarProps = {
   organization: Organization | null;
 };
 
+function getPageTitle(pathname: string): string {
+  if (pathname === "/dashboard") return "Dashboard";
+  if (pathname === "/tasks" || pathname.startsWith("/tasks/")) return "Tasks";
+  if (pathname === "/calendar" || pathname.startsWith("/calendar/")) return "Calendar";
+  if (pathname.startsWith("/teams")) return "Teams";
+  if (pathname === "/people") return "People";
+  if (pathname === "/settings" || pathname.startsWith("/settings/")) return "Settings";
+  if (pathname === "/help") return "Help";
+  return "Kalebs Tracker";
+}
+
 export function TopBar({ user, profile, organization }: TopBarProps) {
+  const pathname = usePathname();
+  const pageTitle = getPageTitle(pathname);
   const initials = getInitials(profile, user.email);
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-4 border-b border-primary/30 bg-primary px-6 text-primary-foreground">
-      <div className="flex flex-1 justify-center">
-        <div className="relative w-full max-w-md">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-primary-foreground/80" />
-          <Input
-            type="search"
-            placeholder="Search tasks, people..."
-            className="border-white/35 bg-white/35 pl-9 text-primary-foreground/80 placeholder:text-primary-foreground/80 disabled:opacity-100"
-            disabled
-            aria-label="Search tasks, people"
-          />
-        </div>
-      </div>
+    <header className="flex h-14 shrink-0 items-center justify-between gap-4 border-b border-primary/30 bg-primary px-6 text-primary-foreground">
+      <h1 className="truncate text-lg font-semibold text-primary-foreground">
+        {pageTitle}
+      </h1>
 
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
         {organization ? (
           <span className="hidden text-sm text-primary-foreground/95 sm:inline">
             {organization.name}

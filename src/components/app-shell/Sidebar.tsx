@@ -6,6 +6,7 @@ import { Caveat } from "next/font/google";
 import {
   Calendar,
   CheckSquare,
+  CircleHelp,
   Settings,
   Home,
   UserCircle,
@@ -71,7 +72,19 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-border px-2 py-4">
+      <div className="space-y-0.5 border-t border-border px-2 py-4">
+        <Link
+          href="/help"
+          className={cn(
+            navLinkClass,
+            pathname === "/help" || pathname.startsWith("/help/")
+              ? "font-semibold text-primary"
+              : "text-foreground/70 hover:text-foreground",
+          )}
+        >
+          <CircleHelp className="size-4 shrink-0" />
+          Help
+        </Link>
         <Link
           href="/settings"
           className={cn(

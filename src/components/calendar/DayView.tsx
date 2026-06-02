@@ -1,12 +1,10 @@
 "use client";
 
 import { format, parseISO } from "date-fns";
-import { CheckCircle2, Plus } from "lucide-react";
-import { useState } from "react";
+import { CheckCircle2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
-import { Button } from "@/components/ui/button";
+import { CreateTaskMenu } from "@/components/tasks/CreateTaskMenu";
 import { applyFilters, parseFilterState } from "@/lib/calendar/filters";
 import { cn } from "@/lib/utils";
 import type { CalendarTask } from "@/types/calendar";
@@ -24,8 +22,6 @@ export function DayView({ tasks, date, currentUserId, myTeamMemberIds }: DayView
   const searchParams = useSearchParams();
   const filterState = parseFilterState(searchParams);
   const filteredTasks = applyFilters(tasks, filterState, currentUserId, myTeamMemberIds);
-
-  const [createOpen, setCreateOpen] = useState(false);
 
   const currentDate = parseISO(date);
   const openTasks = filteredTasks.filter((t) => t.status !== "done");
@@ -47,13 +43,7 @@ export function DayView({ tasks, date, currentUserId, myTeamMemberIds }: DayView
                   : `You have ${openTasks.length} open task${openTasks.length === 1 ? "" : "s"} due today.`}
             </p>
           </div>
-          <Button
-            onClick={() => setCreateOpen(true)}
-            className="shrink-0"
-          >
-            <Plus className="mr-1 size-4" />
-            New Task Today
-          </Button>
+          <CreateTaskMenu label="New Task Today" className="shrink-0" />
         </div>
 
         {/* Open tasks */}
@@ -96,7 +86,6 @@ export function DayView({ tasks, date, currentUserId, myTeamMemberIds }: DayView
         )}
       </div>
 
-      <CreateTaskDialog open={createOpen} onOpenChange={setCreateOpen} />
     </div>
   );
 }

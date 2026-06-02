@@ -129,8 +129,20 @@ function applyHintMatching(
   }));
 }
 
-export function CreateFromTextModal() {
-  const [open, setOpen] = useState(false);
+type CreateFromTextModalProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  hideTrigger?: boolean;
+};
+
+export function CreateFromTextModal({
+  open,
+  onOpenChange,
+  hideTrigger = false,
+}: CreateFromTextModalProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined && onOpenChange !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
   const [rawText, setRawText] = useState("");
   const [status, setStatus] = useState<"idle" | "extracting" | "preview" | "error">(
     "idle",
@@ -148,12 +160,12 @@ export function CreateFromTextModal() {
   const optionsLoading = status === "preview" && options === null;
 
   useEffect(() => {
-    if (!open || options) return;
+    if (!isOpen || options) return;
 
     void getExtractionOptions().then((res) => {
       if (res.ok) setOptions(res.options);
     });
-  }, [open, options]);
+  }, [isOpen, options]);
 
   function updateTask(index: number, patch: Partial<EditableExtractedTask>) {
     setTasks((prev) => prev.map((t, i) => (i === index ? { ...t, ...patch } : t)));
@@ -164,7 +176,8 @@ export function CreateFromTextModal() {
   }
 
   function handleOpenChange(next: boolean) {
-    setOpen(next);
+    if (isControlled) onOpenChange(next);
+    else setInternalOpen(next);
     if (!next) {
       setRawText("");
       setStatus("idle");
@@ -238,10 +251,12 @@ export function CreateFromTextModal() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger className={cn(buttonVariants({ variant: "outline" }))}>
-        + Create from Text
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {!hideTrigger && (
+        <DialogTrigger className={cn(buttonVariants({ variant: "outline" }))}>
+          + Create from Text
+        </DialogTrigger>
+      )}
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="shrink-0 border-b border-border px-6 py-4">
           <DialogTitle>Create Tasks from Text</DialogTitle>

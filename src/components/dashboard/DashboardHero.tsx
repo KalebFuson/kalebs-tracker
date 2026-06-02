@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Plus } from "lucide-react";
-
-import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
-import { Button } from "@/components/ui/button";
+import { CreateTaskMenu } from "@/components/tasks/CreateTaskMenu";
 import { Card, CardContent } from "@/components/ui/card";
 import type { DashboardStats } from "@/types/dashboard";
 
@@ -37,31 +33,19 @@ function buildSubtitle(stats: DashboardStats): string {
 }
 
 export function DashboardHero({ displayName, stats }: DashboardHeroProps) {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   return (
-    <>
-      <Card className="ring-1 ring-border">
-        <CardContent className="flex items-center justify-between gap-4 px-6 py-5">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {getGreeting()}, {displayName}!
-            </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              {buildSubtitle(stats)}
-            </p>
-          </div>
-          <Button
-            onClick={() => setDialogOpen(true)}
-            className="shrink-0"
-          >
-            <Plus className="size-4" />
-            Create New Task
-          </Button>
-        </CardContent>
-      </Card>
-
-      <CreateTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} />
-    </>
+    <Card className="ring-1 ring-border">
+      <CardContent className="flex items-center justify-between gap-4 px-6 py-5">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {getGreeting()}, {displayName}!
+          </h1>
+          <p className="mt-1 text-sm text-gray-600">
+            {buildSubtitle(stats)}
+          </p>
+        </div>
+        <CreateTaskMenu label="Create New Task" className="shrink-0" />
+      </CardContent>
+    </Card>
   );
 }

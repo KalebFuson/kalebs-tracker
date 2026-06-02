@@ -292,7 +292,7 @@ export function CreateTaskDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className="flex max-h-[min(90vh,800px)] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl"
+        className="flex max-h-[min(90vh,800px)] flex-col gap-0 overflow-x-hidden overflow-y-hidden p-0 sm:max-w-2xl"
         showCloseButton
       >
         <DialogHeader className="space-y-1 border-b border-border px-6 py-4">
@@ -306,7 +306,7 @@ export function CreateTaskDialog({
 
         <form
           onSubmit={handleSubmit}
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+          className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto"
         >
           <div className="space-y-4 px-6 py-4">
             {formError ? (
@@ -357,8 +357,8 @@ export function CreateTaskDialog({
 
             <Separator />
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="space-y-1.5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="min-w-0 space-y-1.5">
                 <FieldLabel icon={User}>Assignee</FieldLabel>
                 <Select
                   value={form.assigneeId ?? SELECT_NONE}
@@ -384,7 +384,7 @@ export function CreateTaskDialog({
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <FieldLabel icon={Users}>Team</FieldLabel>
                 <Select
                   value={form.teamId ?? SELECT_NONE}
@@ -410,7 +410,7 @@ export function CreateTaskDialog({
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <FieldLabel icon={CalendarIcon}>Due Date</FieldLabel>
                 <Popover>
                   <PopoverTrigger
@@ -446,7 +446,7 @@ export function CreateTaskDialog({
                 </Popover>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <FieldLabel icon={CircleDot}>Status</FieldLabel>
                 <Select
                   value={form.status}
@@ -470,10 +470,7 @@ export function CreateTaskDialog({
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <FieldLabel icon={Flag}>Priority</FieldLabel>
                 <Select
                   value={form.priority}
